@@ -21,6 +21,7 @@ import {
 import { useState, useEffect } from "react";
 import NavBar from "./NavBar";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const featuredProducts = [
   {
@@ -60,6 +61,7 @@ const featuredProducts = [
 export default function HomePage() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [carouselApi, setCarouselApi] = useState(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!carouselApi) return;
