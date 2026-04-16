@@ -1,0 +1,13 @@
+export const mainPath = "http://127.0.0.1:8000/api";
+export const Register = "register";
+export const Login = "login";
+export const LogoutPath = "logout";
+export const UsersShow = "users";
+export const Google_Call_Back = "auth/google/callback";
+export const USER = "user";
+export const CAT = "categories";
+export const CATADD = "category";
+export const CATADELETE = "category";
+export const CATAEDIT = "category";
+export const PRODUCTS = "products";
+export const PRODUCT = "product";

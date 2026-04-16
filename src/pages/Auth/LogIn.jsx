@@ -1,0 +1,187 @@
+import { useEffect, useRef, useState } from "react";
+import Cookie from "cookie-universal";
+import { useNavigate } from "react-router";
+import axios from "axios";
+import { Login, mainPath } from "../../Api/Api";
+import Loading from "../Loading";
+import { FcGoogle } from "react-icons/fc";
+import { MdOutlineError } from "react-icons/md";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+// import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Mail, Lock } from "lucide-react";
+import logo from "../../assets/shopping-cart.png";
+import { Link } from "react-router-dom";
+
+export default function LogIn() {
+  const foucus = useRef("");
+  //states
+  const [Form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+  const nav = useNavigate();
+  //cookie
+  const cookie = Cookie();
+  //cookie
+  const [load, setLoad] = useState(false);
+  //error
+  const [error, seterror] = useState("");
+  //error
+
+  //states
+
+  // effect to foucus on the email input when the component is mounted
+  useEffect(() => {
+    foucus.current.focus();
+  }, []);
+  // effect to foucus on the email input when the component is mounted
+
+  //functoin
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setLoad(true);
+    try {
+      await axios
+        .post(`${mainPath}/${Login}`, {
+          email: Form.email,
+          password: Form.password,
+        })
+        .then((res) => {
+          setLoad(false);
+          const Token = res.data.token;
+          cookie.set("e-commerce", Token);
+          const role = res.data.user.role;
+          role === "1995"
+            ? nav("/dashboard/dashboardlayout")
+            : role === "1996"
+              ? nav("/dashboard/whriter")
+              : nav("/", { replace: true });
+        });
+    } catch (err) {
+      if (err.status === 401) {
+        seterror("Email or Password is incorrect");
+        setLoad(false);
+      }
+    } finally {
+      setLoad(false);
+    }
+  }
+  //functoin
+  return (
+    <section className="relative flex  w-full items-center justify-center overflow-hidden">
+      {load && <Loading />}
+      <div className="relative container mx-auto flex flex-col items-center justify-center px-4 py-12  ">
+        <Card className="relative w-full max-w-md ring-0 p-8 shadow-2xl">
+          <div className="mb-8 flex flex-col items-center">
+            <div className="my-2 flex justify-center">
+              <div className="bg-secondary relative size-14 rounded-full border">
+                <div className="flex h-full items-center justify-center">
+                  <img src={logo} alt="" />
+                </div>
+              </div>
+            </div>
+            <h1 className="mb-2 text-center text-2xl font-bold tracking-tight">
+              Welcome Back!
+            </h1>
+            <p className="text-muted-foreground text-center text-sm">
+              Log in to continue your journey
+            </p>
+          </div>
+
+          {/* Login Form */}
+          <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+            <div className="relative">
+              <Input
+                ref={foucus}
+                type="email"
+                placeholder="me@example.com"
+                className="bg-transparent ps-10 h-9 text-sm"
+                autoComplete="email"
+                value={Form.email}
+                onChange={(e) => {
+                  setForm({ ...Form, email: e.target.value });
+                }}
+              />
+              <Mail className="text-muted-foreground absolute start-3 top-1/2 size-4 -translate-y-1/2" />
+            </div>
+
+            <div className="relative">
+              <Input
+                type={"password"}
+                placeholder="Password"
+                className="bg-transparent ps-10 h-9 text-sm"
+                autoComplete="current-password"
+                value={Form.password}
+                onChange={(e) => {
+                  setForm({ ...Form, password: e.target.value });
+                }}
+              />
+              <Lock className="text-muted-foreground absolute start-3 top-1/2 size-4 -translate-y-1/2" />
+              <Button
+                type="button"
+                variant="ghost"
+                className="absolute end-0 top-0 h-full cursor-pointer px-3 py-2 hover:bg-transparent"
+              ></Button>
+            </div>
+            {error !== "" && (
+              <p className="flex items-center justify-center text-xs gap-1.5 text-slate-400 mx-auto mt-2">
+                <MdOutlineError className="text-[15px]" />
+                {error}
+              </p>
+            )}
+
+            {/* Remember & Forgot */}
+            {/* <div className="flex items-center justify-between">
+              <a
+                href="#"
+                className="ms-auto inline-block text-sm mx-auto underline-offset-4 hover:underline"
+              >
+                Forgot password?
+              </a>
+            </div> */}
+
+            {/* Login Button */}
+            <Button
+              className="h-9 px-4 py-2 w-full cursor-pointer"
+              type="submit"
+            >
+              Log In
+            </Button>
+
+            {/* Social Login */}
+            <div className="relative my-1 text-center">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t"></div>
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-card text-muted-foreground px-2">
+                  Or continue with
+                </span>
+              </div>
+            </div>
+
+            <div className=" flex justify-center">
+              <Button
+                href={"http://127.0.0.1:8000/login-google"}
+                variant="outline"
+                className="h-9 px-4 py-2 w-full cursor-pointer hover:bg-black"
+              >
+                <FcGoogle />
+              </Button>
+            </div>
+          </form>
+
+          {/* Sign Up Link */}
+          <p className="mt-6 flex justify-center gap-1 text-center text-sm">
+            <span>Don't have an account?</span>
+            <Link to={"/signin"} className="underline underline-offset-4">
+              Create an account
+            </Link>
+          </p>
+        </Card>
+      </div>
+    </section>
+  );
+}
