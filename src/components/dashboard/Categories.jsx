@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { CAT, CATADELETE } from "@/Api/Api";
 import { Axios } from "@/Api/Axios";
-import { Cat } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function Catigories() {
   //states
@@ -14,6 +14,7 @@ export default function Catigories() {
   const [limit, setLimit] = useState(10);
   const [rand, rerand] = useState(false);
   const [total, setTotal] = useState();
+  const { t } = useTranslation();
   //states
   // effect
   useEffect(() => {
@@ -48,11 +49,11 @@ export default function Catigories() {
         className="font-bold text-[25px] text-black"
         style={{ wordSpacing: "-3px" }}
       >
-        Categories List
+        {t("Categories List")}
       </h1>
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 md:gap-0">
         <p className="text-slate-400 ">
-          Manage your product and their roles here.
+          {t("Manage your product and their roles here.")}
         </p>
         <Link to="/dashboard/categories/addCat">
           <Button
@@ -60,7 +61,7 @@ export default function Catigories() {
             type="button"
           >
             <div className="flex items-center justify-between">
-              Add categorie
+              {t("Add categorie")}
               <MdOutlinePersonAdd className="text-[16px] ml-2" />
             </div>
           </Button>

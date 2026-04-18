@@ -2,11 +2,12 @@ import axios from "axios";
 import { LogoutPath, mainPath } from "../../Api/Api";
 import Cookie from "cookie-universal";
 import { useNavigate } from "react-router";
-import { MdOutlineLogout } from "react-icons/md";
+import { useTranslation } from "react-i18next";
 
 export default function Logout() {
   const cookie = Cookie();
   const nav = useNavigate();
+  const { t } = useTranslation();
 
   //functoin
   async function handleLogout() {
@@ -32,7 +33,7 @@ export default function Logout() {
       type="submit"
       onClick={handleLogout}
     >
-      Log out
+      {t("Log out")}
     </button>
   );
 }

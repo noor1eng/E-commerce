@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Axios } from "@/Api/Axios";
 import { PRODUCT, PRODUCTS } from "@/Api/Api";
+import { useTranslation } from "react-i18next";
 
 export default function Product() {
   //states
@@ -13,6 +14,7 @@ export default function Product() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [total, setTotal] = useState();
+  const { t } = useTranslation();
 
   //states
   // effect
@@ -51,11 +53,11 @@ export default function Product() {
         className="font-bold text-[25px] text-black"
         style={{ wordSpacing: "-3px" }}
       >
-        Product List
+        {t("Product List")}
       </h1>
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 md:gap-0">
         <p className="text-slate-400 ">
-          Manage your product and their roles here.
+          {t("Manage your product and their roles here.")}
         </p>
         <Link to="/dashboard/product/addPro">
           <Button
@@ -63,7 +65,7 @@ export default function Product() {
             type="button"
           >
             <div className="flex items-center justify-between">
-              Add product
+              {t("Add Product")}
               <MdOutlinePersonAdd className="text-[16px] ml-2" />
             </div>
           </Button>

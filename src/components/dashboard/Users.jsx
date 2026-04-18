@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { MdOutlinePersonAdd } from "react-icons/md";
 import { Button } from "../ui/button";
 import Table from "./Table";
+import { useTranslation } from "react-i18next";
 
 export default function Users() {
   //states
@@ -16,6 +17,7 @@ export default function Users() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [total, setTotal] = useState();
+  const { t } = useTranslation();
   //states
 
   //get all user
@@ -67,11 +69,11 @@ export default function Users() {
         className="font-bold text-[25px] text-black"
         style={{ wordSpacing: "-3px" }}
       >
-        User List
+        {t("User List")}
       </h1>
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 md:gap-0">
         <p className="text-slate-400 ">
-          Manage your users and their roles here.
+          {t("Manage your users and their roles here.")}
         </p>
         <Link to="/dashboard/users/adduser">
           <Button
@@ -79,7 +81,7 @@ export default function Users() {
             type="button"
           >
             <div className="flex items-center justify-between">
-              Add User
+              {t("Add User")}
               <MdOutlinePersonAdd className="text-[16px] ml-2" />
             </div>
           </Button>

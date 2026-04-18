@@ -20,6 +20,7 @@ import { Axios } from "@/Api/Axios";
 import { useNavigate, useParams } from "react-router-dom";
 import Loading from "@/pages/Loading";
 import { MdOutlineAddPhotoAlternate, MdOutlineCancel } from "react-icons/md";
+import { useTranslation } from "react-i18next";
 //import
 
 export default function EditProduct() {
@@ -44,6 +45,7 @@ export default function EditProduct() {
   const openImage = useRef(false);
   const [images, setImages] = useState([]);
   const [imagesFromApi, setImagesFromApi] = useState([]);
+  const { t } = useTranslation();
   //states------------------
   const nav = useNavigate();
   const pathID = useParams().id; //get product id
@@ -223,13 +225,13 @@ export default function EditProduct() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Edit Your Product</CardTitle>
+        <CardTitle>{t("Edit Your Product")}</CardTitle>
       </CardHeader>
       <CardContent>
         <form className="space-y-6" onSubmit={handleEditPro}>
           {/* Category Select */}
           <div>
-            <Label htmlFor="category">Category</Label>
+            <Label htmlFor="category">{t("Category")}</Label>
             <Select
               value={FormDataa.category}
               onValueChange={(value) => {
@@ -247,7 +249,7 @@ export default function EditProduct() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* title */}
             <div>
-              <Label htmlFor="name">Title</Label>
+              <Label htmlFor="name">{t("Title")}</Label>
               <Input
                 id="name"
                 className="mt-1"
@@ -262,7 +264,7 @@ export default function EditProduct() {
 
             {/* about */}
             <div>
-              <Label htmlFor="sku">About</Label>
+              <Label htmlFor="sku">{t("About")}</Label>
               <Input
                 id="sku"
                 className="mt-1"
@@ -278,7 +280,7 @@ export default function EditProduct() {
 
           {/* text area */}
           <div>
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">{t("Description")}</Label>
             <Textarea
               id="description"
               className="mt-1"
@@ -294,7 +296,7 @@ export default function EditProduct() {
 
           <div className="grid grid-cols-2 gap-6">
             <div>
-              <Label>Base Price</Label>
+              <Label>{t("Base Price")}</Label>
               <Input
                 type="number"
                 className="mt-1"
@@ -308,7 +310,7 @@ export default function EditProduct() {
             </div>
 
             <div>
-              <Label>Discount (%)</Label>
+              <Label>{t("Discount")} (%)</Label>
               <Input
                 type="number"
                 className="mt-1"
@@ -321,7 +323,7 @@ export default function EditProduct() {
             </div>
 
             <div>
-              <Label>Stock</Label>
+              <Label>{t("Stock")}</Label>
               <Input
                 disabled={FormDataa.category === ""}
                 type="number"
@@ -336,7 +338,7 @@ export default function EditProduct() {
           </div>
           {/* ===== Images Upload ===== */}
           <div className="space-y-3">
-            <Label>Product Images</Label>
+            <Label>{t("Product Images")}</Label>
 
             <div
               className="border-2 border-dashed rounded-lg p-6 text-center"
@@ -344,7 +346,7 @@ export default function EditProduct() {
             >
               <p className="text-sm text-muted-foreground mt-2 mb-5">
                 <MdOutlineAddPhotoAlternate className="mx-auto mb-4 cursor-pointer text-[30px]" />
-                Upload one or more product images
+                {t("Upload one or more product images")}
               </p>
               <Input
                 ref={openImage}
@@ -365,7 +367,7 @@ export default function EditProduct() {
 
           {/* Submit Button */}
           <Button type="submit" className="w-full">
-            Save Product
+            {t("Save Product")}
           </Button>
         </form>
       </CardContent>

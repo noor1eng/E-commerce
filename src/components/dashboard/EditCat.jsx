@@ -4,6 +4,7 @@ import { MdClose } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Axios } from "@/Api/Axios";
+import { useTranslation } from "react-i18next";
 
 export default function EditCat() {
   const pathID = useParams().id;
@@ -12,6 +13,7 @@ export default function EditCat() {
   const [title, setTitle] = useState("");
   const [image, setImage] = useState(null);
   const nav = useNavigate();
+  const { t } = useTranslation();
   //states
 
   //Effect
@@ -52,9 +54,11 @@ export default function EditCat() {
             nav("/dashboard/categories");
           }}
         />
-        <h4 className="block text-xl font-medium text-black">Edit Category</h4>
+        <h4 className="block text-xl font-medium text-black">
+          {t("Edit Category")}
+        </h4>
         <p className="text-slate-500 font-light">
-          Update the category here. Click save when you're done.
+          {t("Update the category here. Click save when you're done.")}
         </p>
         <form
           className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96"
@@ -62,7 +66,9 @@ export default function EditCat() {
         >
           <div className="mb-1 flex flex-col gap-6">
             <div className="w-full max-w-sm min-w-[200px]">
-              <label className="block mb-2 text-sm text-black">Title</label>
+              <label className="block mb-2 text-sm text-black">
+                {t("Title")}
+              </label>
               <input
                 value={title}
                 onChange={(e) => {
@@ -74,7 +80,9 @@ export default function EditCat() {
               />
             </div>
             <div className="w-full max-w-sm min-w-[200px]">
-              <label className="block mb-2 text-sm text-black">Image</label>
+              <label className="block mb-2 text-sm text-black">
+                {t("Image")}
+              </label>
               <input
                 onChange={(e) => {
                   setImage(e.target.files.item(0));
@@ -90,7 +98,7 @@ export default function EditCat() {
             type="submit"
             disabled={title.length <= 0}
           >
-            Save Changes
+            {t("Save Changes")}
           </Button>
         </form>
       </div>

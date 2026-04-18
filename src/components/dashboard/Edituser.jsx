@@ -5,6 +5,7 @@ import { Axios } from "../../Api/Axios";
 import { USER } from "../../Api/Api";
 import { useNavigate, useParams } from "react-router";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 export default function Edituser() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -12,6 +13,7 @@ export default function Edituser() {
   const [role, setRole] = useState("");
   const pathID = useParams().id; // get the id reach from url instead of spliting the url
   const nav = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     Axios.get(`/${USER}/${pathID}`)
@@ -52,9 +54,11 @@ export default function Edituser() {
             nav("/dashboard/users");
           }}
         />
-        <h4 className="block text-xl font-medium text-black">Edit User</h4>
+        <h4 className="block text-xl font-medium text-black">
+          {t("Edit User")}
+        </h4>
         <p className="text-slate-500 font-light">
-          Update the user here. Click save when you're done.
+          {t("Update the user here. Click save when you're done.")}
         </p>
         <form
           className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96"
@@ -62,7 +66,9 @@ export default function Edituser() {
         >
           <div className="mb-1 flex flex-col gap-6">
             <div className="w-full max-w-sm min-w-[200px]">
-              <label className="block mb-2 text-sm text-black">Your Name</label>
+              <label className="block mb-2 text-sm text-black">
+                {t("Your Name")}
+              </label>
               <input
                 value={name}
                 onChange={(e) => {
@@ -74,7 +80,9 @@ export default function Edituser() {
               />
             </div>
             <div className="w-full max-w-sm min-w-[200px]">
-              <label className="block mb-2 text-sm text-black">Email</label>
+              <label className="block mb-2 text-sm text-black">
+                {t("Email")}
+              </label>
               <input
                 value={email}
                 onChange={(e) => {
@@ -88,7 +96,9 @@ export default function Edituser() {
           </div>
 
           <div class="w-30 max-w-sm  mt-5">
-            <label className="block mb-2 text-sm text-black">Role:</label>
+            <label className="block mb-2 text-sm text-black">
+              {t("Role")}:
+            </label>
 
             <div class="relative">
               <select
@@ -124,7 +134,7 @@ export default function Edituser() {
             type="submit"
             disabled={able}
           >
-            Save Changes
+            {t("Save Changes")}
           </Button>
         </form>
       </div>

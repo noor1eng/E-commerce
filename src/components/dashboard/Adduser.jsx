@@ -6,6 +6,7 @@ import { Axios } from "../../Api/Axios";
 import { USER } from "../../Api/Api";
 import Loading from "../../pages/Loading";
 import { Button } from "../ui/button";
+import { useTranslation } from "react-i18next";
 export default function AddUser() {
   //states
   const foucus = useRef("");
@@ -17,6 +18,7 @@ export default function AddUser() {
   const [role, setRole] = useState("");
   const [load, setLoad] = useState(false);
   const nav = useNavigate();
+  const { t } = useTranslation();
   //states
 
   //effect
@@ -51,9 +53,11 @@ export default function AddUser() {
         className=" relative mt-7 mb-2 w-100 mx-auto bg-white p-6 rounded-md"
         onSubmit={Adduser}
       >
-        <h4 className="block text-xl font-medium text-black">Add New User</h4>
+        <h4 className="block text-xl font-medium text-black">
+          {t("Add New User")}
+        </h4>
         <p className="text-slate-500 font-light">
-          Add the user here. Click save when you're done.
+          {t("Add the user here. Click save when you're done.")}
         </p>
         <MdClose
           className="ml-auto absolute top-2.5 right-2.5 text-gray-700 hover:text-black cursor-pointer"
@@ -109,12 +113,12 @@ export default function AddUser() {
               className="w-30 bg-transparent mb-5 placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded pl-3 pr-8 py-1.5 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md appearance-none cursor-pointer"
             >
               <option value="" disabled selected>
-                Role:
+                {t("Role")}:
               </option>
-              <option value="1995">Admin</option>
-              <option value="2001">User</option>
-              <option value="1996">Whriter</option>
-              <option value="1999">Product</option>
+              <option value="1995">{t("Admin")}</option>
+              <option value="2001">{t("User")}</option>
+              <option value="1996">{t("Whriter")}</option>
+              <option value="1999">{t("Product")}</option>
             </select>
           </div>
         </div>
@@ -130,7 +134,7 @@ export default function AddUser() {
               role === ""
             }
           >
-            Save Changes
+            {t("Save Changes")}
           </Button>
         </div>
       </form>

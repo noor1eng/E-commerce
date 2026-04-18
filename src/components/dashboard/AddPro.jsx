@@ -20,6 +20,7 @@ import { Axios } from "@/Api/Axios";
 import { useNavigate } from "react-router-dom";
 import Loading from "@/pages/Loading";
 import { MdOutlineCancel } from "react-icons/md";
+import { useTranslation } from "react-i18next";
 
 export default function AddPro() {
   //states
@@ -50,6 +51,7 @@ export default function AddPro() {
   const foucus = useRef("");
   const openImage = useRef(false);
   const nav = useNavigate();
+  const { t } = useTranslation();
   //states
 
   // show categories in select
@@ -162,13 +164,13 @@ export default function AddPro() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Add New Product</CardTitle>
+        <CardTitle>{t("Add New Product")}</CardTitle>
       </CardHeader>
       <CardContent>
         <form className="space-y-6" onSubmit={handleProductEdit}>
           {/* Category Select */}
           <div>
-            <Label htmlFor="category">Category</Label>
+            <Label htmlFor="category">{t("Category")}</Label>
             <Select
               value={FormDataa.category}
               onValueChange={(value) => {
@@ -186,7 +188,7 @@ export default function AddPro() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* title */}
             <div>
-              <Label htmlFor="name">Title</Label>
+              <Label htmlFor="name">{t("Title")}</Label>
               <Input
                 id="name"
                 disabled={FormDataa.category === ""}
@@ -202,7 +204,7 @@ export default function AddPro() {
 
             {/* about */}
             <div>
-              <Label htmlFor="sku">About</Label>
+              <Label htmlFor="sku">{t("About")}</Label>
               <Input
                 disabled={FormDataa.category === ""}
                 id="sku"
@@ -219,7 +221,7 @@ export default function AddPro() {
 
           {/* text area */}
           <div>
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">{t("Description")}</Label>
             <Textarea
               disabled={FormDataa.category === ""}
               id="description"
@@ -236,7 +238,7 @@ export default function AddPro() {
 
           <div className="grid grid-cols-2 gap-6">
             <div>
-              <Label>Base Price</Label>
+              <Label>{t("Base Price")}</Label>
               <Input
                 disabled={FormDataa.category === ""}
                 type="number"
@@ -251,7 +253,7 @@ export default function AddPro() {
             </div>
 
             <div>
-              <Label>Discount (%)</Label>
+              <Label>{t("Discount")} (%)</Label>
               <Input
                 disabled={FormDataa.category === ""}
                 type="number"
@@ -265,7 +267,7 @@ export default function AddPro() {
             </div>
 
             <div>
-              <Label>Stock</Label>
+              <Label>{t("Stock")}</Label>
               <Input
                 disabled={FormDataa.category === ""}
                 type="number"
@@ -281,7 +283,7 @@ export default function AddPro() {
 
           {/* ===== Images Upload ===== */}
           <div className="space-y-3">
-            <Label>Product Images</Label>
+            <Label>{t("Product Images")}</Label>
 
             <div
               className="border-2 border-dashed rounded-lg p-6 text-center"
@@ -289,7 +291,7 @@ export default function AddPro() {
             >
               <p className="text-sm text-muted-foreground mt-2 mb-5">
                 <MdOutlineAddPhotoAlternate className="mx-auto mb-4 cursor-pointer text-[30px]" />
-                Upload one or more product images
+                {t("Upload one or more product images")}
               </p>
               <Input
                 disabled={FormDataa.category === ""}
@@ -341,7 +343,7 @@ export default function AddPro() {
 
           {/* Submit Button */}
           <Button type="submit" className="w-full">
-            Save Product
+            {t("Save Product")}
           </Button>
         </form>
       </CardContent>

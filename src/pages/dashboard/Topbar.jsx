@@ -19,11 +19,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { useTranslation } from "react-i18next";
 
 export default function Topbar({ toggleSidebar }) {
   //states
   const [user, setUser] = useState("");
   const [email, setemail] = useState("");
+  const { t } = useTranslation();
 
   const cookie = Cookie();
   const Token = cookie.get("e-commerce");
@@ -55,7 +57,7 @@ export default function Topbar({ toggleSidebar }) {
             className="rounded-xl max-w-[200px]"
             placeholder="Search..."
           />
-          <Button className="rounded-xl hidden md:block">Search</Button>
+          <Button className="rounded-xl hidden md:block">{t("Search")}</Button>
         </Field>
       </div>
       <div className="flex items-center gap-7">

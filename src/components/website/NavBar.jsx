@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Logout from "@/pages/Auth/Logout";
 import { Menu } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const list = [
@@ -29,6 +30,7 @@ const list = [
   { name: "OFFERS", href: "" },
 ];
 export default function NavBar() {
+  const { t } = useTranslation();
   const [categories, setCategories] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const nav = useNavigate();
@@ -66,7 +68,9 @@ export default function NavBar() {
               <NavigationMenu key={index}>
                 <NavigationMenuList>
                   <NavigationMenuItem>
-                    <NavigationMenuTrigger>{item.name}</NavigationMenuTrigger>
+                    <NavigationMenuTrigger>
+                      {t(item.name)}
+                    </NavigationMenuTrigger>
                     <NavigationMenuContent>
                       <div className="p-4 gap-2">
                         <div className="flex justify-center gap-2">
@@ -77,7 +81,7 @@ export default function NavBar() {
                           className="w-full mt-4"
                           onClick={() => nav("/CategorieWeb")}
                         >
-                          View All
+                          {t("View All")}
                         </Button>
                       </div>
                     </NavigationMenuContent>
@@ -90,7 +94,7 @@ export default function NavBar() {
                 to={"/ProductWeb"}
                 className={`${"text-black"} mx-4 text-md font-medium hover:bg-gray-100 rounded-md px-4 py-1 transition-colors duration-300`}
               >
-                {item.name}
+                {t(item.name)}
               </Link>
             ) : (
               <a
@@ -98,7 +102,7 @@ export default function NavBar() {
                 href={item.href}
                 className={`${"text-black"} mx-4 text-md font-medium hover:bg-gray-100 rounded-md px-4 py-1 transition-colors duration-300`}
               >
-                {item.name}
+                {t(item.name)}
               </a>
             ),
           )}

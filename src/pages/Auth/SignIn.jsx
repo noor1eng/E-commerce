@@ -14,10 +14,12 @@ import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Mail, Lock, User } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function SignIn() {
   //satets
   const foucus = useRef("");
+  const { t } = useTranslation();
   const [Form, setForm] = useState({
     name: "",
     email: "",
@@ -85,10 +87,10 @@ export default function SignIn() {
             </div>
 
             <h1 className="mb-2 text-center text-2xl font-bold tracking-tight">
-              Create Your Account
+              {t("Create Your Account")}
             </h1>
             <p className="text-muted-foreground text-center text-sm">
-              Get started by filling out the form below
+              {t("Get started by filling out the form below")}
             </p>
           </div>
 
@@ -197,7 +199,7 @@ export default function SignIn() {
               className="h-9 px-4 py-2 w-full cursor-pointer"
               type="submit"
             >
-              Create Account
+              {t("Create Account")}
             </Button>
 
             {/* Social Sign Up */}
@@ -207,7 +209,7 @@ export default function SignIn() {
               </div>
               <div className="relative flex justify-center text-xs uppercase">
                 <span className="bg-card text-muted-foreground px-2">
-                  Or sign up with
+                  {t("Or sign up with")}
                 </span>
               </div>
             </div>
@@ -225,9 +227,9 @@ export default function SignIn() {
 
           {/* Sign In Link */}
           <p className="mt-3 flex justify-center gap-1 text-center text-sm">
-            <span>Already have an account?</span>
+            <span>{t("Already have an account?")}</span>
             <Link to={"/login"} className="underline underline-offset-4">
-              Sign In
+              {t("Sign in")}
             </Link>
           </p>
         </Card>

@@ -4,12 +4,13 @@ import { MdOutlineDashboard } from "react-icons/md";
 import { MdOutlinePersonOutline } from "react-icons/md";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { MdOutlineCategory } from "react-icons/md";
-
+import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
 export default function SideBar({ isOpen, toggleSidebar }) {
   const [active, setActive] = useState("");
   const location = useLocation();
+  const { t } = useTranslation();
 
   // keep the active menu item in sync with the current URL so that
   // refreshing the page or landing directly on a route still highlights
@@ -48,7 +49,7 @@ export default function SideBar({ isOpen, toggleSidebar }) {
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4">
-          {isOpen && <h2 className="text-lg font-bold">Admin</h2>}
+          {isOpen && <h2 className="text-lg font-bold">{t("Admin")}</h2>}
           <button onClick={toggleSidebar} className="md:hidden">
             <MdOutlineSpaceDashboard className="text-[20px] cursor-pointer text-black border border-solid border-gray-300 rounded-md p-1 hover:bg-slate-100" />
           </button>
@@ -59,7 +60,7 @@ export default function SideBar({ isOpen, toggleSidebar }) {
           {/* Dashboard */}
           <Link to={"/dashboard/dashboardlayout"}>
             <Item
-              label="Dashboard"
+              label={t("Dashboard")}
               icon={<MdOutlineDashboard className="text-[18px]" />}
               active={active === "Dashboard"}
               isOpen={isOpen}
@@ -70,7 +71,7 @@ export default function SideBar({ isOpen, toggleSidebar }) {
           {/* Users */}
           <Link to={"/dashboard/users"}>
             <Item
-              label="Users"
+              label={t("Users")}
               icon={<MdOutlinePersonOutline className="text-[18px]" />}
               active={active === "Users"}
               isOpen={isOpen}
@@ -81,7 +82,7 @@ export default function SideBar({ isOpen, toggleSidebar }) {
           {/* categories */}
           <Link to={"/dashboard/categories"}>
             <Item
-              label="Categories"
+              label={t("Categories")}
               icon={<MdOutlineCategory className="text-[18px]" />}
               active={active === "Categories"}
               isOpen={isOpen}
@@ -92,7 +93,7 @@ export default function SideBar({ isOpen, toggleSidebar }) {
           {/* product */}
           <Link to={"/dashboard/product"}>
             <Item
-              label="Products"
+              label={t("Products")}
               icon={<MdOutlineShoppingCart className="text-[18px]" />}
               active={active === "Products"}
               isOpen={isOpen}

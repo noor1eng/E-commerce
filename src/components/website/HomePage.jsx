@@ -95,16 +95,17 @@ export default function HomePage() {
             <header className="space-y-8">
               <Badge variant="outline" className="rounded-full px-4 py-2">
                 <TrendingUp className="me-1 !size-4" />
-                New Collection 2025
+                {t("New Collection 2025")}
               </Badge>
 
               <h1 className="text-5xl leading-tight font-bold font-sans text-balance md:text-6xl lg:text-6xl">
-                Discover Your Perfect Style
+                {t("Discover Your Perfect Style")}
               </h1>
 
               <p className="text-muted-foreground max-w-lg leading-[1.5] text-xl font-sans text-balance">
-                Explore our curated collection of premium products. Each piece
-                is handpicked for those who appreciate quality and style.
+                {t(
+                  "Explore our curated collection of premium products. Each piece is handpicked for those who appreciate quality and style.",
+                )}
               </p>
 
               <div className="relative max-w-md">
@@ -119,7 +120,7 @@ export default function HomePage() {
                   size="lg"
                   className="absolute end-2 top-1/2 -translate-y-1/2 cursor-pointer rounded-full px-6"
                 >
-                  Search
+                  {t("Search")}
                 </Button>
               </div>
 
@@ -129,7 +130,8 @@ export default function HomePage() {
                     size="lg"
                     className="cursor-pointer gap-2 rounded-full px-8 py-3 text-lg"
                   >
-                    Shop Now
+                    {t("Shop Now")}
+
                     <ArrowRight className="size-4" />
                   </Button>
                 </Link>
@@ -139,7 +141,7 @@ export default function HomePage() {
                   className="cursor-pointer gap-2 rounded-full px-8 py-3 text-lg"
                 >
                   <ShoppingBag className="size-4" />
-                  View Catalog
+                  {t("View Catalog")}
                 </Button>
               </div>
             </header>
@@ -165,7 +167,7 @@ export default function HomePage() {
                               <div className="relative size-full overflow-hidden rounded-md flex ">
                                 <img
                                   src={product.image}
-                                  alt={product.name}
+                                  alt={t(product.name)}
                                   className="h-[500px] w-full object-cover"
                                   loading="lazy"
                                 />
@@ -173,21 +175,22 @@ export default function HomePage() {
                                 <div className="text-background-foreground absolute inset-0 flex flex-col justify-end p-8 text-black">
                                   <div className="relative z-10 max-w-md space-y-4">
                                     <Badge className="w-fit rounded-full">
-                                      {product.tag}
+                                      {t(product.tag)}
                                     </Badge>
                                     <h2 className="text-5xl font-bold">
-                                      {product.name}
+                                      {t(product.name)}
                                     </h2>
                                     <p className="text-background-foreground/80 text-xl">
-                                      Discover the latest in style and comfort
-                                      with our premium collection.
+                                      {t(
+                                        "Discover the latest in style and comfort with our premium collection.",
+                                      )}
                                     </p>
                                     <div className="flex items-center gap-4 pt-2">
                                       <Button
                                         size="lg"
                                         className="cursor-pointer rounded-full"
                                       >
-                                        Shop Now
+                                        {t("Shop Now")}
                                       </Button>
                                       <div className="text-foreground flex items-center gap-1">
                                         <Star className="fill-foreground size-5 " />
@@ -195,7 +198,7 @@ export default function HomePage() {
                                           {product.rating}
                                         </span>
                                         <span className="text-foreground/80">
-                                          ({product.reviews} reviews)
+                                          ({product.reviews} {t("reviews")})
                                         </span>
                                       </div>
                                     </div>
@@ -203,7 +206,7 @@ export default function HomePage() {
                                 </div>
                                 {product.trending && (
                                   <div className="text-background-foreground bg-foreground/10 dark:bg-background/20 absolute end-8 top-8 flex items-center gap-1 rounded-full px-3 py-1 text-sm font-medium backdrop-blur-xs">
-                                    <Flame className="size-4" /> Trending
+                                    <Flame className="size-4" /> {t("Trending")}
                                   </div>
                                 )}
                               </div>

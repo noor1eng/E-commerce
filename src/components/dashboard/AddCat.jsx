@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import Loading from "@/pages/Loading";
 import { MdClose } from "react-icons/md";
 import { Axios } from "@/Api/Axios";
+import { useTranslation } from "react-i18next";
 
 export default function AddCat() {
   //startes
@@ -13,6 +14,7 @@ export default function AddCat() {
   const [image, setimage] = useState(null);
   const [load, setLoad] = useState(false);
   const nav = useNavigate();
+  const { t } = useTranslation();
   //startes
 
   //effect
@@ -47,9 +49,11 @@ export default function AddCat() {
         className=" relative mt-7 mb-2 w-100 mx-auto bg-white p-6 rounded-md"
         onSubmit={AddCat}
       >
-        <h4 className="block text-xl font-medium text-black">Add Categoris</h4>
+        <h4 className="block text-xl font-medium text-black">
+          {t("Add Categoris")}
+        </h4>
         <p className="text-slate-500 font-light">
-          Add the Categories here. Click save when you're done.
+          {t("Add the Categories here. Click save when you're done.")}
         </p>
         <MdClose
           className="ml-auto absolute top-2.5 right-2.5 text-gray-700 hover:text-black cursor-pointer"
