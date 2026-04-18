@@ -98,7 +98,7 @@ export default function LogIn() {
               <Input
                 ref={foucus}
                 type="email"
-                placeholder="me@example.com"
+                placeholder={t("me@example.com")}
                 className="bg-transparent ps-10 h-9 text-sm"
                 autoComplete="email"
                 value={Form.email}
@@ -130,7 +130,7 @@ export default function LogIn() {
             {error !== "" && (
               <p className="flex items-center justify-center text-xs gap-1.5 text-slate-400 mx-auto mt-2">
                 <MdOutlineError className="text-[15px]" />
-                {error}
+                {t("Email or Password is incorrect")}
               </p>
             )}
 

@@ -180,7 +180,7 @@ export default function AddPro() {
             >
               ,
               <SelectTrigger className=" mt-1" ref={foucus}>
-                <SelectValue placeholder="Select a category" />
+                <SelectValue placeholder={t("Select a category")} />
               </SelectTrigger>
               <SelectContent>{showcat}</SelectContent>
             </Select>
@@ -193,7 +193,7 @@ export default function AddPro() {
                 id="name"
                 disabled={FormDataa.category === ""}
                 className="mt-1"
-                placeholder="Product Name"
+                placeholder={t("Product Name")}
                 value={FormDataa.title}
                 onChange={(e) =>
                   setFormData({ ...FormDataa, title: e.target.value })
@@ -209,7 +209,7 @@ export default function AddPro() {
                 disabled={FormDataa.category === ""}
                 id="sku"
                 className="mt-1"
-                placeholder="About the product"
+                placeholder={t("About the product")}
                 value={FormDataa.About}
                 onChange={(e) =>
                   setFormData({ ...FormDataa, About: e.target.value })
@@ -226,7 +226,7 @@ export default function AddPro() {
               disabled={FormDataa.category === ""}
               id="description"
               className="mt-1"
-              placeholder="Product Description"
+              placeholder={t("Product Description")}
               value={FormDataa.description}
               onChange={(e) =>
                 setFormData({ ...FormDataa, description: e.target.value })
@@ -244,7 +244,7 @@ export default function AddPro() {
                 type="number"
                 className="mt-1"
                 step="10"
-                placeholder="0"
+                placeholder={t("0")}
                 value={FormDataa.price}
                 onChange={(e) =>
                   setFormData({ ...FormDataa, price: e.target.value })
@@ -258,7 +258,7 @@ export default function AddPro() {
                 disabled={FormDataa.category === ""}
                 type="number"
                 className="mt-1"
-                placeholder="Optional"
+                placeholder={t("Optional")}
                 value={FormDataa.discount}
                 onChange={(e) =>
                   setFormData({ ...FormDataa, discount: e.target.value })
@@ -272,7 +272,7 @@ export default function AddPro() {
                 disabled={FormDataa.category === ""}
                 type="number"
                 className="mt-1"
-                placeholder="Optional"
+                placeholder={t("Optional")}
                 value={FormDataa.Stock}
                 onChange={(e) =>
                   setFormData({ ...FormDataa, Stock: e.target.value })
@@ -311,7 +311,7 @@ export default function AddPro() {
                     <div className=" relative">
                       <img
                         src={URL.createObjectURL(img)}
-                        alt={`Preview ${index + 1}`}
+                        alt={t(`Preview ${index + 1}`)}
                         className="w-20 h-20 object-cover rounded"
                       />
                       <MdOutlineCancel
@@ -325,7 +325,7 @@ export default function AddPro() {
                       <p>{(img.size * 10 ** -6).toFixed(2)} MB</p>
                       <Field className="w-full max-w-sm">
                         <FieldLabel htmlFor="progress-upload">
-                          <span className="text-[12px]">Upload progress</span>
+                          <span className="text-[12px]">{t("Upload progress")}</span>
                           <span className="ml-auto">{upload[index] || 0}%</span>
                         </FieldLabel>
                         <Progress

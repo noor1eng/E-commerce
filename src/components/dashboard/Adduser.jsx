@@ -71,7 +71,7 @@ export default function AddUser() {
               ref={foucus}
               type="text"
               className="w-full bg-transparent placeholder:text-slate-400 placeholder:absolute placeholder:left-0 focus:placeholder:text-transparent text-slate-700 text-sm border-b border-slate-200  px-3 py-2 transition placeholder:duration-500 ease outline-none"
-              placeholder="Your Name"
+              placeholder={t("Your Name")}
               value={Form.name}
               onChange={(e) => {
                 setForm({ ...Form, name: e.target.value });
@@ -84,7 +84,7 @@ export default function AddUser() {
               type="email"
               required
               className="w-full bg-transparent placeholder:text-slate-400 placeholder:absolute placeholder:left-0 focus:placeholder:text-transparent text-slate-700 text-sm border-b border-slate-200 px-3 py-2  transition placeholder:duration-500 ease outline-none"
-              placeholder="Your Email"
+              placeholder={t("Your Email")}
               value={Form.email}
               onChange={(e) => {
                 setForm({ ...Form, email: e.target.value });
@@ -96,7 +96,7 @@ export default function AddUser() {
             <input
               type="password"
               className="w-full bg-transparent placeholder:text-slate-400 placeholder:absolute placeholder:left-0 focus:placeholder:text-transparent text-slate-700 text-sm border-b border-slate-200  px-3 py-2 transition placeholder:duration-500 ease outline-none"
-              placeholder="Your Password"
+              placeholder={t("Your Password")}
               value={Form.password}
               onChange={(e) => {
                 setForm({ ...Form, password: e.target.value });
@@ -113,7 +113,7 @@ export default function AddUser() {
               className="w-30 bg-transparent mb-5 placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded pl-3 pr-8 py-1.5 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md appearance-none cursor-pointer"
             >
               <option value="" disabled selected>
-                {t("Role")}:
+                {t("Select Role:")}
               </option>
               <option value="1995">{t("Admin")}</option>
               <option value="2001">{t("User")}</option>

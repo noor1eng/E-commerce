@@ -76,7 +76,7 @@ export default function Edituser() {
                 }}
                 type="text"
                 className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
-                placeholder="Your Name"
+                placeholder={t("Your Name")}
               />
             </div>
             <div className="w-full max-w-sm min-w-[200px]">
@@ -90,7 +90,7 @@ export default function Edituser() {
                 }}
                 type="email"
                 className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
-                placeholder="Your Email"
+                placeholder={t("Your Email")}
               />
             </div>
           </div>
@@ -110,7 +110,7 @@ export default function Edituser() {
               >
                 <option value="1995">Admin</option>
                 <option value="2001">User</option>
-                <option value="1996">Whriter</option>
+                <option value="1996">{t("Whriter")}</option>
               </select>
               <svg
                 xmlns="http://www.w3.org/2000/svg"

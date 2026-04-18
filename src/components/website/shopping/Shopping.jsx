@@ -23,10 +23,12 @@ import NavBar from "../NavBar";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSonner } from "@/hooks/use-sonner";
+import { useTranslation } from "react-i18next";
 
 export default function ShoppingCart() {
   const [proCart, setPro] = useState([]);
   const showToast = useSonner();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const pro = JSON.parse(localStorage.getItem("product")) || [];
@@ -90,7 +92,7 @@ export default function ShoppingCart() {
                   {cart.title}
                 </h3>
                 <p className="text-muted-foreground mt-1 text-sm">
-                  {"Black size one"}
+                  {t("Black size one")}
                 </p>
               </div>
               <Button
@@ -142,7 +144,7 @@ export default function ShoppingCart() {
         <CardFooter className="bg-muted/20 border-t px-4 !py-2">
           <div className="text-muted-foreground flex items-center text-sm">
             <Package className="me-2 size-4" />
-            <span>Estimated delivery: 3-5 business days</span>
+            <span>{t("Estimated delivery: 3-5 business days")}</span>
           </div>
         </CardFooter>
       </Card>
@@ -156,10 +158,10 @@ export default function ShoppingCart() {
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-8 mt-20">
           <div className="flex flex-col gap-2 mb-8 text-center">
             <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-              Your Shopping Cart
+              {t("Your Shopping Cart")}
             </h1>
             <p className="text-muted-foreground">
-              {`${itemNumber} item${itemNumber === 1 ? "" : "s"}`} in your cart
+              {`${itemNumber} ${itemNumber === 1 ? t("item") : t("items")}`} {t("in your cart")}
               •{" "}
               <span className="text-foreground font-semibold">
                 ${subtotal.toFixed(2)}
@@ -174,16 +176,16 @@ export default function ShoppingCart() {
                 <Card className="border-dashed">
                   <CardContent className="flex flex-col items-center justify-center py-12 text-center">
                     <ShoppingBag className="text-muted-foreground/50 mb-4 size-12" />
-                    <h3 className="text-lg font-medium">Your cart is empty</h3>
+                    <h3 className="text-lg font-medium">{t("Your cart is empty")}</h3>
                     <p className="text-muted-foreground mt-1 text-sm">
-                      Add some items to get started
+                      {t("Add some items to get started")}
                     </p>
                     <Link to={"/ProductWeb"}>
                       <Button
                         className="h-9 px-4 py-2 mt-4 cursor-pointer"
                         variant="outline"
                       >
-                        Continue Shopping
+                        {t("Continue Shopping")}
                       </Button>
                     </Link>
                   </CardContent>
@@ -197,17 +199,17 @@ export default function ShoppingCart() {
             <div className="flex flex-col gap-4 w-full lg:w-96">
               <Card className=" gap-0">
                 <CardHeader className="pb-4">
-                  <CardTitle className="text-xl">Order Summary</CardTitle>
+                  <CardTitle className="text-xl">{t("Order Summary")}</CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-4">
                   <div className="flex flex-col gap-3">
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Subtotal</span>
+                      <span className="text-muted-foreground">{t("Subtotal")}</span>
                       <span>${subtotal.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Shipping</span>
-                      <span className="text-success">Free</span>
+                      <span className="text-muted-foreground">{t("Shipping")}</span>
+                      <span className="text-success">{t("Free")}</span>
                     </div>
                     {/* {savings > 0 && (
                   <div className="flex justify-between text-sm font-medium">
@@ -220,30 +222,30 @@ export default function ShoppingCart() {
                   <Separator className="my-2" />
 
                   <div className="flex items-center justify-between text-base font-medium">
-                    <span>Total</span>
+                    <span>{t("Total")}</span>
                     <div className="text-end">
                       <p className="text-xl font-bold">
                         ${subtotal.toFixed(2)}
                       </p>
                       <p className="text-muted-foreground text-xs">
-                        including VAT, if applicable
+                        {t("including VAT, if applicable")}
                       </p>
                     </div>
                   </div>
 
                   <Button
-                    onClick={() => showToast("Proceeding Done")}
+                    onClick={() => showToast(t("Proceeding Done"))}
                     size="lg"
                     className="h-10 px-8 mt-4 w-full cursor-pointer text-base font-medium"
                     // disabled={items.length === 0}
                   >
                     <ShoppingBag />
-                    Proceed to Checkout
+                    {t("Proceed to Checkout")}
                   </Button>
 
                   <div className="text-muted-foreground flex items-center justify-center gap-2 text-xs">
                     <CreditCard className="size-3.5" />
-                    <span>Secure payment with SSL encryption</span>
+                    <span>{t("Secure payment with SSL encryption")}</span>
                   </div>
                 </CardContent>
               </Card>
@@ -255,9 +257,9 @@ export default function ShoppingCart() {
                       <Shield className="size-5" />
                     </div>
                     <div>
-                      <h4 className="font-medium">Secure Checkout</h4>
+                      <h4 className="font-medium">{t("Secure Checkout")}</h4>
                       <p className="text-muted-foreground mt-1 text-xs">
-                        Your payment information is encrypted and secure.
+                        {t("Your payment information is encrypted and secure.")}
                       </p>
                     </div>
                   </div>
@@ -270,7 +272,7 @@ export default function ShoppingCart() {
                   className="h-9 px-4 py-2 w-full cursor-pointer"
                 >
                   <Store />
-                  Continue Shopping
+                  {t("Continue Shopping")}
                   <MoveRight />
                 </Button>
               </Link>

@@ -111,7 +111,7 @@ export default function HomePage() {
               <div className="relative max-w-md">
                 <Input
                   type="search"
-                  placeholder="Search products..."
+                  placeholder={t("Search products...")}
                   className="h-14 rounded-full pe-4 pl-12 text-lg"
                   aria-label="Search products"
                 />
@@ -222,7 +222,7 @@ export default function HomePage() {
                     <button
                       key={index}
                       className={`relative size-2.5 rounded-full transition-all ${activeIndex === index ? "bg-foreground" : "bg-foreground/50"}`}
-                      aria-label={`Go to slide ${index + 1}`}
+                      aria-label={t(`Go to slide ${index + 1}`)}
                       onClick={() => {
                         setActiveIndex(index);
                         carouselApi?.scrollTo(index);

@@ -101,7 +101,7 @@ export default function SignIn() {
                 ref={foucus}
                 id="fullname-signup3-j9as8d"
                 type="text"
-                placeholder="Full Name"
+                placeholder={t("Full Name")}
                 className="bg-transparent ps-10 h-9 text-sm"
                 autoComplete="name"
                 value={Form.name}
@@ -116,7 +116,7 @@ export default function SignIn() {
             {showEror && Form.name <= 0 && (
               <p className="flex items-center text-xs gap-1.5 text-slate-400">
                 <MdOutlineError className="text-[15px]" />
-                Not Valid Name
+                {t("Not Valid Name")}
               </p>
             )}
             {/* show error for name */}
@@ -125,7 +125,7 @@ export default function SignIn() {
               <Input
                 id="email-signup3-k2l3f9"
                 type="email"
-                placeholder="me@example.com"
+                placeholder={t("me@example.com")}
                 className="bg-transparent ps-10 h-9 text-sm"
                 autoComplete="email"
                 required
@@ -150,7 +150,7 @@ export default function SignIn() {
               <Input
                 id="password-signup3-m4n5b6"
                 type="password"
-                placeholder="Password"
+                placeholder={t("Password")}
                 className="bg-transparent ps-10 h-9 text-sm"
                 autoComplete="new-password"
                 value={Form.password}
@@ -165,8 +165,7 @@ export default function SignIn() {
             {showEror && Form.password.length < 8 && (
               <p className="flex items-center text-xs gap-1.5 text-slate-400">
                 <MdOutlineError className="text-[15px]" />
-                Use at least 8 characters, one uppercase, one lowercase and one
-                number.
+                {t("Use at least 8 characters, one uppercase, one lowercase and one number.")}
               </p>
             )}
             {/* show error for pass */}
@@ -175,7 +174,7 @@ export default function SignIn() {
               <Input
                 id="password-signup3-m4n5b6"
                 type="password"
-                placeholder="Password Confirm"
+                placeholder={t("Password Confirm")}
                 className="bg-transparent ps-10 h-9 text-sm"
                 autoComplete="new-password"
                 value={Form.confirmpass}
@@ -190,7 +189,7 @@ export default function SignIn() {
             {showEror && Form.confirmpass !== Form.password && (
               <p className="flex items-center text-xs gap-1.5 text-slate-400">
                 <MdOutlineError className="text-[15px]" />
-                Password confirm incorrect
+                {t("Password confirm incorrect")}
               </p>
             )}
             {/* show error for confirm pass */}

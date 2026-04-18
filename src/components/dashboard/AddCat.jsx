@@ -50,10 +50,10 @@ export default function AddCat() {
         onSubmit={AddCat}
       >
         <h4 className="block text-xl font-medium text-black">
-          {t("Add Categoris")}
+          {t("Add Category")}
         </h4>
         <p className="text-slate-500 font-light">
-          {t("Add the Categories here. Click save when you're done.")}
+          {t("Add the Category here. Click save when you're done.")}
         </p>
         <MdClose
           className="ml-auto absolute top-2.5 right-2.5 text-gray-700 hover:text-black cursor-pointer"
@@ -67,7 +67,7 @@ export default function AddCat() {
               ref={foucus}
               type="text"
               className="w-full bg-transparent placeholder:text-slate-400 placeholder:absolute placeholder:left-0 focus:placeholder:text-transparent text-slate-700 text-sm border-b border-slate-200  px-3 py-2 transition placeholder:duration-500 ease outline-none"
-              placeholder="Title"
+              placeholder={t("Title")}
               value={title}
               onChange={(e) => {
                 setTitle(e.target.value);
@@ -80,7 +80,7 @@ export default function AddCat() {
               type="file"
               required
               className="w-full bg-transparent placeholder:text-slate-400 placeholder:absolute placeholder:left-0 focus:placeholder:text-transparent text-slate-700 text-sm border-b border-slate-200 px-3 py-2  transition placeholder:duration-500 ease outline-none"
-              placeholder="Image"
+              placeholder={t("Image")}
               onChange={(e) => {
                 setimage(e.target.files.item(0));
               }}
@@ -94,7 +94,7 @@ export default function AddCat() {
             type="submit"
             disabled={title.length <= 0 || image === null}
           >
-            Save Changes
+            {t("Save Changes")}
           </Button>
         </div>
       </form>

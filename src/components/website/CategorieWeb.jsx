@@ -1,7 +1,7 @@
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag } from "lucide-react";
+import { ShoppingBag, ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Axios } from "@/Api/Axios";
 import { CAT } from "@/Api/Api";
@@ -16,6 +16,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { useTranslation } from "react-i18next";
 
 export default function CategorieWeb() {
   const [categories, setCategories] = useState([]);
@@ -24,6 +25,7 @@ export default function CategorieWeb() {
   const [limit, setLimit] = useState(9);
   const [total, setTotal] = useState();
   const totalPages = Math.ceil(total / limit);
+  const { t } = useTranslation();
   useEffect(() => {
     setLoading(true);
     Axios.get(`/${CAT}?limit=${limit}&page=${page}`)
@@ -46,34 +48,37 @@ export default function CategorieWeb() {
 
   const showCat = categories.map((cat) => {
     return (
-      <Card
-        key={cat.id}
-        className="group cursor-pointer overflow-hidden py-0 transition-all duration-500 hover:shadow-lg"
-      >
+      <Card className="group cursor-pointer overflow-hidden py-0 transition-all duration-500 hover:shadow-xl hover:-translate-y-1 border-0 bg-white/80 backdrop-blur-sm">
         <div className="relative aspect-[5/4] overflow-hidden">
           <img
             src={cat.image}
-            alt={"image"}
-            className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+            alt={cat.title}
+            className="size-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
 
           {/* Trending Badge */}
           {cat.trending && (
-            <Badge className="absolute top-4 left-4">Trending</Badge>
+            <Badge className="absolute top-4 left-4 bg-orange-500 hover:bg-orange-600 text-white">
+              {t("Trending")}
+            </Badge>
           )}
 
           {/* Category Info Overlay */}
-          <div className="absolute right-0 bottom-0 left-0 p-6 text-white font-sans ">
-            <h3 className="mb-1 text-xl font-bold text-white/80">
+          <div className="absolute right-0 bottom-0 left-0 p-6 text-white">
+            <h3 className="mb-2 text-2xl font-bold text-white drop-shadow-lg">
               {cat.title}
             </h3>
-            <p className="mb-3 text-sm text-white/80">
-              Laptops, phones, and gadgets
+            <p className="mb-4 text-sm text-white/90 drop-shadow-md">
+              {t("Explore our collection")}
             </p>
-            <div className="flex items-center justify-between">
-              <span className="text-sm">2,156 items</span>
-            </div>
+            <Button
+              size="sm"
+              className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm transition-all duration-300 group-hover:bg-white group-hover:text-black"
+            >
+              {t("Shop Now")}
+              <ArrowRight className="ml-2 size-4 transition-transform group-hover:translate-x-1" />
+            </Button>
           </div>
         </div>
       </Card>
@@ -82,21 +87,21 @@ export default function CategorieWeb() {
   return (
     <>
       <NavBar />
-      <div className="md:shadow-[0px_0px_2px_0px_#0000003b] rounded-xl md:m-1.5 ">
+      <div className="md:shadow-[0px_0px_2px_0px_#0000003b] rounded-xl md:m-1.5 bg-gradient-to-br from-slate-50 via-white to-slate-100 min-h-screen">
         <section className="py-12 mt-20">
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             {/* Header */}
             <div className="mb-12 text-center">
-              <h2 className="text-3xl font-bold tracking-tight text-balance">
-                Shop by Category
+              <h2 className="text-4xl font-bold tracking-tight text-balance bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                {t("Shop by Category")}
               </h2>
               <p className="text-muted-foreground mt-4 text-lg">
-                Discover products across our most popular categories
+                {t("Discover products across our most popular categories")}
               </p>
             </div>
 
             {/* Categories Grid */}
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {categories.length > 0 ? showCat : loading && <Skel />}
             </div>
           </div>
@@ -139,7 +144,7 @@ export default function CategorieWeb() {
             <Link to={"/"}>
               <Button size="lg" className="cursor-pointer gap-2">
                 <ShoppingBag className="size-5" />
-                Back to Shopping
+                {t("Back to Shopping")}
               </Button>
             </Link>
           </div>

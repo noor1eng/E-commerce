@@ -20,9 +20,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Logout from "@/pages/Auth/Logout";
-import { Menu } from "lucide-react";
+import { Menu, Globe } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Badge } from "@/components/ui/badge";
 
 const list = [
   { name: "STORE", href: "/ProductWeb" },
@@ -30,10 +31,15 @@ const list = [
   { name: "OFFERS", href: "" },
 ];
 export default function NavBar() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [categories, setCategories] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const nav = useNavigate();
+
+  const toggleLanguage = () => {
+    const newLang = i18n.language === "en" ? "ar" : "en";
+    i18n.changeLanguage(newLang);
+  };
 
   useEffect(() => {
     Axios.get(`${CAT}`).then((res) => {
@@ -43,12 +49,23 @@ export default function NavBar() {
 
   const showCat = categories.map((cat) => {
     return (
-      <a
+      <div
         key={cat.id}
-        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+        to={`/products?category=${cat.id}`}
+        className="group relative overflow-hidden rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg"
+        title={cat.title}
       >
-        {cat.title}
-      </a>
+        <img
+          src={cat.image}
+          alt={cat.title}
+          className="w-16 h-16 object-cover rounded-lg border-2 border-transparent group-hover:border-gray-300 transition-all duration-300"
+        />
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 rounded-lg flex items-center justify-center">
+          <span className="text-white font-medium text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            {cat.title}
+          </span>
+        </div>
+      </div>
     );
   });
 
@@ -72,12 +89,10 @@ export default function NavBar() {
                       {t(item.name)}
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                      <div className="p-4 gap-2">
-                        <div className="flex justify-center gap-2">
-                          {showCat}
-                        </div>
+                      <div className="p-6 w-[300px]">
+                        <div className="grid grid-cols-3 gap-4">{showCat}</div>
                         <Button
-                          variant=""
+                          variant="outline"
                           className="w-full mt-4"
                           onClick={() => nav("/CategorieWeb")}
                         >
@@ -121,18 +136,34 @@ export default function NavBar() {
                   item.name === "COLLECTION" ? (
                     <div key={index}>
                       <h3 className="text-lg font-semibold mb-2">
-                        {item.name}
+                        {t(item.name)}
                       </h3>
-                      <div className="flex flex-col gap-2">{showCat}</div>
+                      <div className="grid grid-cols-3 gap-3">
+                        {categories.map((cat) => (
+                          <Link
+                            key={cat.id}
+                            to={`/products?category=${cat.id}`}
+                            className="group relative overflow-hidden rounded-lg transition-all duration-300 hover:scale-105"
+                            onClick={() => setIsOpen(false)}
+                            title={cat.title}
+                          >
+                            <img
+                              src={cat.image}
+                              alt={cat.title}
+                              className="w-12 h-12 object-cover rounded-lg border-2 border-transparent group-hover:border-gray-300 transition-all duration-300"
+                            />
+                          </Link>
+                        ))}
+                      </div>
                       <Button
-                        variant=""
+                        variant="outline"
                         className="w-full mt-4"
                         onClick={() => {
                           nav("/CategorieWeb");
                           setIsOpen(false);
                         }}
                       >
-                        View All
+                        {t("View All")}
                       </Button>
                     </div>
                   ) : item.name === "STORE" ? (
@@ -160,6 +191,17 @@ export default function NavBar() {
           </Sheet>
         </div>
         <div className="flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleLanguage}
+            className="hover:bg-gray-100 flex items-center gap-2 px-3 py-1"
+          >
+            <Globe className="w-4 h-4" />
+            <Badge variant="secondary" className="text-xs">
+              {i18n.language.toUpperCase()}
+            </Badge>
+          </Button>
           <Link to={"/shopping"}>
             <MdOutlineShoppingCart className="w-6 h-6 cursor-pointer" />
           </Link>
@@ -177,10 +219,18 @@ export default function NavBar() {
                 </AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-35" align="end">
-              {/* <DropdownMenuGroup></DropdownMenuGroup> */}
-              {/* <DropdownMenuSeparator /> */}
+            <DropdownMenuContent className="w-48" align="start">
               <DropdownMenuGroup>
+                <DropdownMenuItem asChild>
+                  <Link to="/login" className="cursor-pointer">
+                    {t("Log In")}
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/signin" className="cursor-pointer">
+                    {t("Create Account")}
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem variant="destructive">
                   <Logout />
                 </DropdownMenuItem>

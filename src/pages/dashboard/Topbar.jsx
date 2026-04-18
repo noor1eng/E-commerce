@@ -55,7 +55,7 @@ export default function Topbar({ toggleSidebar }) {
           <Input
             type="search"
             className="rounded-xl max-w-[200px]"
-            placeholder="Search..."
+            placeholder={t("Search...")}
           />
           <Button className="rounded-xl hidden md:block">{t("Search")}</Button>
         </Field>
@@ -80,9 +80,9 @@ export default function Topbar({ toggleSidebar }) {
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-35" align="end">
             <DropdownMenuGroup>
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Billing</DropdownMenuItem>
-              <DropdownMenuItem>Settings</DropdownMenuItem>
+                <DropdownMenuItem>{t("Profile")}</DropdownMenuItem>
+                <DropdownMenuItem>{t("Billing")}</DropdownMenuItem>
+                <DropdownMenuItem>{t("Settings")}</DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
