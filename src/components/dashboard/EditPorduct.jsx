@@ -1,5 +1,11 @@
 //import
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -24,7 +30,6 @@ import { useTranslation } from "react-i18next";
 //import
 
 export default function EditProduct() {
-  //states-----------------
   const [FormDataa, setFormData] = useState({
     category: "",
     title: "",
@@ -40,17 +45,15 @@ export default function EditProduct() {
   const [categories, setCat] = useState([]);
   const [imageId, setImgId] = useState([]);
   const [upload, setUpload] = useState([]);
-  const foucus = useRef("");
+  const focus = useRef(null);
   const [idfromserver, setidformserver] = useState([]);
-  const openImage = useRef(false);
+  const openImage = useRef(null);
   const [images, setImages] = useState([]);
   const [imagesFromApi, setImagesFromApi] = useState([]);
   const { t } = useTranslation();
-  //states------------------
   const nav = useNavigate();
-  const pathID = useParams().id; //get product id
-  console.log(idfromserver);
-  //useEffect
+  const pathID = useParams().id;
+
   useEffect(() => {
     Axios.get(`/${CAT}`)
       .then((res) => {
@@ -60,58 +63,55 @@ export default function EditProduct() {
         console.log(err);
       });
   }, []);
-  //useEffect
 
-  //useEffetct
   useEffect(() => {
-    try {
-      Axios.get(`${PRODUCT}/${pathID}`).then((res) => {
-        console.log(res.data);
-
-        setID(res.data[0].id);
-        setFormData(res.data[0]);
-        setImagesFromApi(res.data[0].images);
+    Axios.get(`${PRODUCT}/${pathID}`)
+      .then((res) => {
+        const product = res.data?.[0];
+        if (!product) {
+          nav("/dashboard/product/page/404", { replace: true });
+          return;
+        }
+        setID(product.id);
+        setFormData(product);
+        setImagesFromApi(product.images || []);
+      })
+      .catch(() => {
+        nav("/dashboard/product/page/404", { replace: true });
       });
-    } catch (err) {
-      console.log(err);
-    }
-  }, []);
-  //useEffetct
+  }, [nav, pathID]);
 
-  // show categories in select
-  const showcat = categories.map((cat, index) => {
-    return (
-      <SelectItem key={index} value={String(cat.id)}>
-        {cat.title}
-      </SelectItem>
-    );
-  });
-  // show categories in select
+  const showcat = categories.length
+    ? categories.map((cat) => (
+        <SelectItem key={cat.id} value={String(cat.id)}>
+          {cat.title}
+        </SelectItem>
+      ))
+    : [<SelectItem key="empty">{t("No categories available")}</SelectItem>];
 
-  //fucn
   function handleopenSelectImage() {
-    openImage.current.click();
+    openImage.current?.click();
   }
-  //fucn
 
-  //func
   async function handleimagesend(e) {
-    const files = Array.from(e.target.files);
+    const files = Array.from(e.target.files || []);
     setImages((prev) => [...prev, ...files]);
     const startIndex = images.length;
+
     for (let i = 0; i < files.length; i++) {
       const data = new FormData();
       data.append("image", files[i]);
       data.append("product_id", id);
+
       try {
-        const res = await Axios.post("/product-img/add", data, {
-          onUploadProgress: (progresEvent) => {
-            const load = progresEvent.loaded;
-            const total = progresEvent.total;
-            const persent = Math.floor((load * 100) / total);
+        await Axios.post("/product-img/add", data, {
+          onUploadProgress: (progressEvent) => {
+            const loaded = progressEvent.loaded;
+            const total = progressEvent.total;
+            const percent = Math.floor((loaded * 100) / total);
             setUpload((prev) => {
               const copy = [...prev];
-              copy[startIndex + i] = persent;
+              copy[startIndex + i] = percent;
               return copy;
             });
           },
@@ -123,168 +123,156 @@ export default function EditProduct() {
       }
     }
   }
-  //func
 
-  // func delet image come form api
   async function handledeletimagefromapi(ide) {
     setidformserver((prev) => [...prev, ide]);
-    setImagesFromApi((prev) =>
-      prev.filter((img) => {
-        return img.id !== ide;
-      }),
-    );
+    setImagesFromApi((prev) => prev.filter((img) => img.id !== ide));
   }
-  // func delete image come form api
 
-  // func delet image come form state
   async function handledeletimagefromstate(ide, imgnow) {
     try {
-      await Axios.delete(`product-img/${ide}`).then((res) => {
-        setImages((prev) =>
-          prev.filter((img) => {
-            return img !== imgnow;
-          }),
-        );
-      });
+      await Axios.delete(`product-img/${ide}`);
+      setImages((prev) => prev.filter((img) => img !== imgnow));
     } catch (err) {
       console.log(err);
     }
   }
-  // func delete image come form state
 
-  //show image form api
-  const imageformapi = imagesFromApi.map((img, index) => {
-    return (
-      <div key={index} className="relative">
-        <div className=" relative">
-          <img
-            src={img.image}
-            alt={`Preview ${index + 1}`}
-            className="w-20 h-20 object-cover rounded"
-          />
-          <MdOutlineCancel
-            className=" absolute top-[-5px] right-[-5px] text-black cursor-pointer rounded-lg text-[18px] bg-white"
-            onClick={() => {
-              handledeletimagefromapi(img.id);
-            }}
-          />
-        </div>
+  const imageformapi = imagesFromApi.map((img, index) => (
+    <div
+      key={img.id || index}
+      className="relative overflow-hidden rounded-3xl border border-slate-200 bg-slate-50"
+    >
+      <img
+        src={img.image}
+        alt={`Preview ${index + 1}`}
+        className="h-28 w-28 object-cover"
+      />
+      <button
+        type="button"
+        className="absolute right-2 top-2 rounded-full bg-white p-1 shadow-sm"
+        onClick={() => handledeletimagefromapi(img.id)}
+      >
+        <MdOutlineCancel className="h-5 w-5 text-slate-700" />
+      </button>
+    </div>
+  ));
+
+  const imageformstate = images.map((img, index) => (
+    <div
+      key={index}
+      className="flex flex-col gap-3 rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:flex-row sm:items-center"
+    >
+      <div className="relative h-28 w-28 overflow-hidden rounded-3xl bg-slate-100">
+        <img
+          src={URL.createObjectURL(img)}
+          alt={`Preview ${index + 1}`}
+          className="h-full w-full object-cover"
+        />
+        <button
+          type="button"
+          className="absolute right-2 top-2 rounded-full bg-white p-1 shadow-sm"
+          onClick={() => handledeletimagefromstate(imageId[index], img)}
+        >
+          <MdOutlineCancel className="h-5 w-5 text-slate-700" />
+        </button>
       </div>
-    );
-  });
-  //show image form api
-
-  //show image form state
-  const imageformstate = images.map((img, index) => {
-    return (
-      <div key={index} className=" flex gap-4">
-        <div className=" relative">
-          <img
-            src={URL.createObjectURL(img)}
-            alt={`Preview ${index + 1}`}
-            className="w-20 h-20 object-cover rounded"
+      <div className="flex-1 space-y-2">
+        <p className="text-sm text-slate-600">
+          {(img.size * 10 ** -6).toFixed(2)} MB
+        </p>
+        <Field className="w-full">
+          <FieldLabel htmlFor={`progress-upload-${index}`}>
+            <span className="text-xs text-slate-500">
+              {t("Upload progress")}
+            </span>
+            <span className="ml-auto text-xs text-slate-500">
+              {upload[index] || 0}%
+            </span>
+          </FieldLabel>
+          <Progress
+            value={upload[index] || 0}
+            id={`progress-upload-${index}`}
           />
-          <MdOutlineCancel
-            className=" absolute top-[-5px] right-[-5px] text-black cursor-pointer rounded-lg text-[18px] bg-white"
-            onClick={() => {
-              handledeletimagefromstate(imageId[index], img);
-            }}
-          />
-        </div>
-        <div className=" w-full">
-          <p>{(img.size * 10 ** -6).toFixed(2)} MB</p>
-          <Field className="w-full max-w-sm">
-            <FieldLabel htmlFor="progress-upload">
-              <span className="text-[12px]">Upload progress</span>
-              <span className="ml-auto">{upload[index] || 0}%</span>
-            </FieldLabel>
-            <Progress value={upload[index] || 0} id="progress-upload" />
-          </Field>
-        </div>
+        </Field>
       </div>
-    );
-  });
-  //show image form state
+    </div>
+  ));
 
-  //func submit edit
   async function handleEditPro(e) {
     e.preventDefault();
+    setLoad(true);
     try {
-      for (let i = 0; i < idfromserver.length; i++) {
-        await Axios.delete(`/product-img/${idfromserver[i]}`);
+      for (const imgId of idfromserver) {
+        await Axios.delete(`/product-img/${imgId}`);
       }
-      await Axios.post(`${PRODUCT}/edit/${pathID}`, FormDataa).then((res) => {
-        window.location.pathname = "/dashboard/product";
-      });
+      await Axios.post(`${PRODUCT}/edit/${pathID}`, FormDataa);
+      nav("/dashboard/product");
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoad(false);
     }
   }
-  //func submit edit
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="overflow-hidden shadow-2xl">
+      <CardHeader className="bg-slate-50 px-6 py-6">
         <CardTitle>{t("Edit Your Product")}</CardTitle>
+        <CardDescription>
+          {t("Update product details, pricing and images from one view.")}
+        </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-6 px-6 py-6">
         <form className="space-y-6" onSubmit={handleEditPro}>
-          {/* Category Select */}
-          <div>
+          <div className="space-y-3">
             <Label htmlFor="category">{t("Category")}</Label>
             <Select
               value={FormDataa.category}
-              onValueChange={(value) => {
-                setFormData({ ...FormDataa, category: value });
-                // handleSubmitForm();
-              }}
+              onValueChange={(value) =>
+                setFormData({ ...FormDataa, category: value })
+              }
             >
-              ,
-              <SelectTrigger className=" mt-1" ref={foucus}>
-                <SelectValue placeholder="Select a category" />
+              <SelectTrigger className="mt-1 w-full" ref={focus}>
+                <SelectValue placeholder={t("Select a category")} />
               </SelectTrigger>
               <SelectContent>{showcat}</SelectContent>
             </Select>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* title */}
-            <div>
-              <Label htmlFor="name">{t("Title")}</Label>
+
+          <div className="grid gap-6 lg:grid-cols-2">
+            <div className="space-y-3">
+              <Label htmlFor="title">{t("Title")}</Label>
               <Input
-                id="name"
+                id="title"
                 className="mt-1"
-                placeholder="Product Name"
+                placeholder={t("Product Name")}
                 value={FormDataa.title}
                 onChange={(e) =>
                   setFormData({ ...FormDataa, title: e.target.value })
                 }
               />
             </div>
-            {/* title */}
-
-            {/* about */}
-            <div>
-              <Label htmlFor="sku">{t("About")}</Label>
+            <div className="space-y-3">
+              <Label htmlFor="about">{t("About")}</Label>
               <Input
-                id="sku"
+                id="about"
                 className="mt-1"
-                placeholder="About the product"
+                placeholder={t("Short summary")}
                 value={FormDataa.About}
                 onChange={(e) =>
                   setFormData({ ...FormDataa, About: e.target.value })
                 }
               />
             </div>
-            {/* about */}
           </div>
 
-          {/* text area */}
-          <div>
+          <div className="space-y-3">
             <Label htmlFor="description">{t("Description")}</Label>
             <Textarea
               id="description"
               className="mt-1"
-              placeholder="Product Description"
+              placeholder={t("Product Description")}
               value={FormDataa.description}
               onChange={(e) =>
                 setFormData({ ...FormDataa, description: e.target.value })
@@ -292,12 +280,11 @@ export default function EditProduct() {
             />
           </div>
 
-          {/* ===== Pricing Section ===== */}
-
-          <div className="grid grid-cols-2 gap-6">
-            <div>
-              <Label>{t("Base Price")}</Label>
+          <div className="grid gap-6 lg:grid-cols-3">
+            <div className="space-y-3">
+              <Label htmlFor="price">{t("Base Price")}</Label>
               <Input
+                id="price"
                 type="number"
                 className="mt-1"
                 step="10"
@@ -308,27 +295,27 @@ export default function EditProduct() {
                 }
               />
             </div>
-
-            <div>
-              <Label>{t("Discount")} (%)</Label>
+            <div className="space-y-3">
+              <Label htmlFor="discount">{t("Discount")} (%)</Label>
               <Input
+                id="discount"
                 type="number"
                 className="mt-1"
-                placeholder="Optional"
+                placeholder={t("Optional")}
                 value={FormDataa.discount}
                 onChange={(e) =>
                   setFormData({ ...FormDataa, discount: e.target.value })
                 }
               />
             </div>
-
-            <div>
-              <Label>{t("Stock")}</Label>
+            <div className="space-y-3">
+              <Label htmlFor="stock">{t("Stock")}</Label>
               <Input
+                id="stock"
                 disabled={FormDataa.category === ""}
                 type="number"
                 className="mt-1"
-                placeholder="Optional"
+                placeholder={t("Optional")}
                 value={FormDataa.Stock}
                 onChange={(e) =>
                   setFormData({ ...FormDataa, Stock: e.target.value })
@@ -336,37 +323,41 @@ export default function EditProduct() {
               />
             </div>
           </div>
-          {/* ===== Images Upload ===== */}
+
           <div className="space-y-3">
             <Label>{t("Product Images")}</Label>
-
             <div
-              className="border-2 border-dashed rounded-lg p-6 text-center"
+              className="cursor-pointer rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-6 text-center transition hover:border-slate-400 hover:bg-slate-100"
               onClick={handleopenSelectImage}
             >
-              <p className="text-sm text-muted-foreground mt-2 mb-5">
-                <MdOutlineAddPhotoAlternate className="mx-auto mb-4 cursor-pointer text-[30px]" />
+              <MdOutlineAddPhotoAlternate className="mx-auto mb-4 text-[30px] text-slate-500" />
+              <p className="text-sm text-slate-500">
                 {t("Upload one or more product images")}
               </p>
-              <Input
-                ref={openImage}
-                multiple
-                accept="image/*"
-                type="file"
-                className="cursor-pointer w-[200px] mx-auto text-center text-sm hidden"
-                onChange={handleimagesend}
-              />
             </div>
-            {/* edit image and send before add product form api */}
-            {imagesFromApi.length > 0 && (
-              <div className="flex flex-wrap gap-4">{imageformapi}</div>
-            )}
-            {images.length > 0 && <>{imageformstate}</>}
+            <Input
+              ref={openImage}
+              multiple
+              accept="image/*"
+              type="file"
+              className="hidden"
+              onChange={handleimagesend}
+            />
           </div>
-          {/* edit image and send before add product from api */}
 
-          {/* Submit Button */}
-          <Button type="submit" className="w-full">
+          {imagesFromApi.length > 0 && (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {imageformapi}
+            </div>
+          )}
+          {images.length > 0 && (
+            <div className="space-y-4">{imageformstate}</div>
+          )}
+
+          <Button
+            type="submit"
+            className="w-full rounded-xl bg-slate-950 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-200/20 hover:bg-slate-900"
+          >
             {t("Save Product")}
           </Button>
         </form>

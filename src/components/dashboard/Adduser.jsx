@@ -1,15 +1,24 @@
 //rebuild
 import { useEffect, useRef, useState } from "react";
 import { MdClose } from "react-icons/md";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { Axios } from "../../Api/Axios";
 import { USER } from "../../Api/Api";
 import Loading from "../../pages/Loading";
 import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "../ui/card";
 import { useTranslation } from "react-i18next";
+
 export default function AddUser() {
-  //states
-  const foucus = useRef("");
+  const focus = useRef(null);
   const [Form, setForm] = useState({
     name: "",
     email: "",
@@ -19,125 +28,122 @@ export default function AddUser() {
   const [load, setLoad] = useState(false);
   const nav = useNavigate();
   const { t } = useTranslation();
-  //states
 
-  //effect
   useEffect(() => {
-    foucus.current.focus();
+    focus.current?.focus();
   }, []);
-  //effect
 
-  //function
   async function Adduser(e) {
-    setLoad(true);
     e.preventDefault();
+    setLoad(true);
+
     try {
       await Axios.post(`${USER}/add`, {
         name: Form.name,
         email: Form.email,
         password: Form.password,
-        role: role,
-      }).then((res) => {
-        window.location.pathname = "/dashboard/users";
-        setLoad(false);
+        role,
       });
+      nav("/dashboard/users");
     } catch (err) {
       console.log(err);
+    } finally {
       setLoad(false);
     }
   }
-  //function
+
   return (
-    <div className=" absolute top-0 left-0 w-full h-screen bg-[#00000047] flex justify-center items-center">
-      <form
-        className=" relative mt-7 mb-2 w-100 mx-auto bg-white p-6 rounded-md"
-        onSubmit={Adduser}
-      >
-        <h4 className="block text-xl font-medium text-black">
-          {t("Add New User")}
-        </h4>
-        <p className="text-slate-500 font-light">
-          {t("Add the user here. Click save when you're done.")}
-        </p>
-        <MdClose
-          className="ml-auto absolute top-2.5 right-2.5 text-gray-700 hover:text-black cursor-pointer"
-          onClick={() => {
-            nav("/dashboard/users");
-          }}
-        />
-        <div className="mb-1 flex flex-col gap-4 mt-10">
-          <div className="w-full max-w-sm min-w-50">
-            <input
-              ref={foucus}
-              type="text"
-              className="w-full bg-transparent placeholder:text-slate-400 placeholder:absolute placeholder:left-0 focus:placeholder:text-transparent text-slate-700 text-sm border-b border-slate-200  px-3 py-2 transition placeholder:duration-500 ease outline-none"
-              placeholder={t("Your Name")}
-              value={Form.name}
-              onChange={(e) => {
-                setForm({ ...Form, name: e.target.value });
-              }}
-            />
+    <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/40 px-4 py-8 backdrop-blur-sm">
+      <Card className="w-full max-w-2xl overflow-hidden shadow-2xl">
+        <CardHeader className="flex items-start justify-between gap-4 border-b border-slate-200 bg-slate-50 px-6 py-5">
+          <div>
+            <CardTitle className="text-2xl">{t("Add New User")}</CardTitle>
+            <CardDescription className="text-sm text-slate-500">
+              {t("Create a new user account and assign the correct role.")}
+            </CardDescription>
           </div>
-
-          <div className="w-full max-w-sm min-w-50">
-            <input
-              type="email"
-              required
-              className="w-full bg-transparent placeholder:text-slate-400 placeholder:absolute placeholder:left-0 focus:placeholder:text-transparent text-slate-700 text-sm border-b border-slate-200 px-3 py-2  transition placeholder:duration-500 ease outline-none"
-              placeholder={t("Your Email")}
-              value={Form.email}
-              onChange={(e) => {
-                setForm({ ...Form, email: e.target.value });
-              }}
-            />
-          </div>
-
-          <div className="w-full max-w-sm min-w-50">
-            <input
-              type="password"
-              className="w-full bg-transparent placeholder:text-slate-400 placeholder:absolute placeholder:left-0 focus:placeholder:text-transparent text-slate-700 text-sm border-b border-slate-200  px-3 py-2 transition placeholder:duration-500 ease outline-none"
-              placeholder={t("Your Password")}
-              value={Form.password}
-              onChange={(e) => {
-                setForm({ ...Form, password: e.target.value });
-              }}
-            />
-          </div>
-
-          <div class="relative">
-            <select
-              value={role}
-              onChange={(e) => {
-                setRole(e.target.value);
-              }}
-              className="w-30 bg-transparent mb-5 placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded pl-3 pr-8 py-1.5 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md appearance-none cursor-pointer"
-            >
-              <option value="" disabled selected>
-                {t("Select Role:")}
-              </option>
-              <option value="1995">{t("Admin")}</option>
-              <option value="2001">{t("User")}</option>
-              <option value="1996">{t("Whriter")}</option>
-              <option value="1999">{t("Product")}</option>
-            </select>
-          </div>
-        </div>
-        <div className="flex justify-center items-center gap-3">
           <Button
-            className="mt-4 w-30 cursor-pointer
-             rounded-md ml-auto bg-black py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-800 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-            type="submit"
-            disabled={
-              Form.name.length <= 0 ||
-              Form.password.length < 8 ||
-              Form.email.length <= 0 ||
-              role === ""
-            }
+            variant="ghost"
+            className="h-10 w-10 rounded-full text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+            onClick={() => nav("/dashboard/users")}
           >
-            {t("Save Changes")}
+            <MdClose className="h-5 w-5" />
           </Button>
-        </div>
-      </form>
+        </CardHeader>
+
+        <CardContent className="px-6 py-6">
+          <form className="grid gap-6" onSubmit={Adduser}>
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="name">{t("Your Name")}</Label>
+                <Input
+                  id="name"
+                  ref={focus}
+                  value={Form.name}
+                  onChange={(e) => setForm({ ...Form, name: e.target.value })}
+                  placeholder={t("Your Name")}
+                  type="text"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">{t("Email")}</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={Form.email}
+                  onChange={(e) => setForm({ ...Form, email: e.target.value })}
+                  placeholder={t("Your Email")}
+                />
+              </div>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="password">{t("Password")}</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={Form.password}
+                  onChange={(e) => setForm({ ...Form, password: e.target.value })}
+                  placeholder={t("Your Password")}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="role">{t("Role")}</Label>
+                <select
+                  id="role"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                  className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-100"
+                >
+                  <option value="" disabled>
+                    {t("Select Role")}
+                  </option>
+                  <option value="1995">{t("Admin")}</option>
+                  <option value="2001">{t("User")}</option>
+                  <option value="1996">{t("Whriter")}</option>
+                  <option value="1999">{t("Product")}</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="flex justify-end">
+              <Button
+                type="submit"
+                disabled={
+                  Form.name.length === 0 ||
+                  Form.email.length === 0 ||
+                  Form.password.length < 8 ||
+                  role === ""
+                }
+                className="rounded-xl bg-slate-950 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-200/20 hover:bg-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {t("Save Changes")}
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
       {load && <Loading />}
     </div>
   );

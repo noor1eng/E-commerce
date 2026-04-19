@@ -1,17 +1,26 @@
-//rebuild
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
-import { Axios } from "../../Api/Axios";
-import { USER } from "../../Api/Api";
-import { useNavigate, useParams } from "react-router";
+import { Axios } from "@/Api/Axios";
+import { USER } from "@/Api/Api";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { useTranslation } from "react-i18next";
+
 export default function Edituser() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [able, disable] = useState(true);
   const [role, setRole] = useState("");
-  const pathID = useParams().id; // get the id reach from url instead of spliting the url
+  const pathID = useParams().id;
   const nav = useNavigate();
   const { t } = useTranslation();
 
@@ -21,123 +30,102 @@ export default function Edituser() {
         setName(res.data.name);
         setEmail(res.data.email);
         setRole(res.data.role);
-
         disable(false);
       })
-      .catch((err) => {
+      .catch(() => {
         nav("/dashboard/users/page/404", { replace: true });
       });
-  }, []);
+  }, [nav, pathID]);
 
   async function UpdateUser(e) {
     e.preventDefault();
     try {
       await Axios.post(`${USER}/edit/${pathID}`, {
-        name: name,
-        email: email,
-        role: role,
-        // eslint-disable-next-line no-unused-vars
-      }).then((res) => {
-        window.location.pathname = "/dashboard/users";
+        name,
+        email,
+        role,
       });
+      nav("/dashboard/users");
     } catch (err) {
       console.log(err);
     }
   }
 
   return (
-    <div className="w-full h-[110vh] bg-[#00000047] absolute top-0 left-0 flex justify-center items-center">
-      <div className="relative flex flex-col rounded-md bg-white p-5">
-        <MdClose
-          className="ml-auto text-gray-700 hover:text-black"
-          onClick={() => {
-            nav("/dashboard/users");
-          }}
-        />
-        <h4 className="block text-xl font-medium text-black">
-          {t("Edit User")}
-        </h4>
-        <p className="text-slate-500 font-light">
-          {t("Update the user here. Click save when you're done.")}
-        </p>
-        <form
-          className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96"
-          onSubmit={UpdateUser}
-        >
-          <div className="mb-1 flex flex-col gap-6">
-            <div className="w-full max-w-sm min-w-[200px]">
-              <label className="block mb-2 text-sm text-black">
-                {t("Your Name")}
-              </label>
-              <input
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                }}
-                type="text"
-                className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
-                placeholder={t("Your Name")}
-              />
-            </div>
-            <div className="w-full max-w-sm min-w-[200px]">
-              <label className="block mb-2 text-sm text-black">
-                {t("Email")}
-              </label>
-              <input
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
-                type="email"
-                className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
-                placeholder={t("Your Email")}
-              />
-            </div>
+    <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/40 backdrop-blur-sm px-4 py-8">
+      <Card className="w-full max-w-3xl overflow-hidden shadow-2xl">
+        <div className="flex flex-col gap-2 border-b border-slate-200 bg-slate-50 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <CardTitle className="text-2xl">{t("Edit User")}</CardTitle>
+            <CardDescription className="text-sm text-slate-500">
+              {t("Update the user details and save your changes.")}
+            </CardDescription>
           </div>
-
-          <div class="w-30 max-w-sm  mt-5">
-            <label className="block mb-2 text-sm text-black">
-              {t("Role")}:
-            </label>
-
-            <div class="relative">
-              <select
-                value={role}
-                onChange={(e) => {
-                  setRole(e.target.value);
-                }}
-                className="w-full bg-transparent mb-2 placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded pl-3 pr-8 py-1.5 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md appearance-none cursor-pointer"
-              >
-                <option value="1995">Admin</option>
-                <option value="2001">User</option>
-                <option value="1996">{t("Whriter")}</option>
-              </select>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.2"
-                stroke="currentColor"
-                class="h-5 w-5 ml-1 absolute top-2 right-2.5 text-slate-700"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"
-                />
-              </svg>
-            </div>
-          </div>
-
           <Button
-            className="mt-6 w-30 block ml-auto rounded-md bg-black py-1.5 px-3 border border-transparent  text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-800 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-            type="submit"
-            disabled={able}
+            variant="ghost"
+            className="h-10 w-10 rounded-full text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+            onClick={() => nav("/dashboard/users")}
           >
-            {t("Save Changes")}
+            <MdClose className="h-5 w-5" />
           </Button>
-        </form>
-      </div>
+        </div>
+
+        <CardContent className="px-6 py-6">
+          <form className="grid gap-6" onSubmit={UpdateUser}>
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="name">{t("Your Name")}</Label>
+                <Input
+                  id="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  type="text"
+                  placeholder={t("Your Name")}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">{t("Email")}</Label>
+                <Input
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  type="email"
+                  placeholder={t("Your Email")}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="role">{t("Role")}</Label>
+              <div className="relative">
+                <select
+                  id="role"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                  className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 pr-10 text-sm text-slate-700 outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-100"
+                >
+                  <option value="1995">Admin</option>
+                  <option value="2001">User</option>
+                  <option value="1996">{t("Whriter")}</option>
+                </select>
+                <span className="pointer-events-none absolute inset-y-0 right-4 grid place-items-center text-slate-500">
+                  ▾
+                </span>
+              </div>
+            </div>
+
+            <div className="flex justify-end">
+              <Button
+                type="submit"
+                disabled={able}
+                className="rounded-xl bg-slate-950 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-200/20 hover:bg-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {t("Save Changes")}
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

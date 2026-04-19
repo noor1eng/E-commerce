@@ -2,106 +2,110 @@ import { CAT, CATAEDIT } from "@/Api/Api";
 import { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button } from "../ui/button";
-import { Axios } from "@/Api/Axios";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { useTranslation } from "react-i18next";
+import { Axios } from "@/Api/Axios";
 
 export default function EditCat() {
   const pathID = useParams().id;
-
-  //states
   const [title, setTitle] = useState("");
   const [image, setImage] = useState(null);
   const nav = useNavigate();
   const { t } = useTranslation();
-  //states
 
-  //Effect
   useEffect(() => {
     Axios.get(`${CATAEDIT}/${pathID}`)
       .then((res) => {
-        console.log(res.data);
         setTitle(res.data.title);
       })
-      .catch((err) => {
-        nav("/dashboard/categroeis/page/404", { replace: true });
+      .catch(() => {
+        nav("/dashboard/categories/page/404", { replace: true });
       });
-  }, []);
+  }, [nav, pathID]);
 
-  //Effect
-
-  //func
   async function UpdateUser(e) {
     e.preventDefault();
     const form = new FormData();
-    form.append(`title`, title);
-    form.append(`image`, image);
+    form.append("title", title);
+    if (image) {
+      form.append("image", image);
+    }
+
     try {
-      await Axios.post(`${CATAEDIT}/edit/${pathID}`, form).then((res) => {
-        window.location.pathname = "/dashboard/categories";
-      });
+      await Axios.post(`${CATAEDIT}/edit/${pathID}`, form);
+      nav("/dashboard/categories");
     } catch (err) {
       console.log(err);
     }
   }
-  //func
+
   return (
-    <div className="w-full h-[110vh] bg-[#00000047] absolute top-0 left-0 flex justify-center items-center">
-      <div className="relative flex flex-col rounded-md bg-white p-5">
-        <MdClose
-          className="ml-auto text-gray-700 hover:text-black"
-          onClick={() => {
-            nav("/dashboard/categories");
-          }}
-        />
-        <h4 className="block text-xl font-medium text-black">
-          {t("Edit Category")}
-        </h4>
-        <p className="text-slate-500 font-light">
-          {t("Update the category here. Click save when you're done.")}
-        </p>
-        <form
-          className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96"
-          onSubmit={UpdateUser}
-        >
-          <div className="mb-1 flex flex-col gap-6">
-            <div className="w-full max-w-sm min-w-[200px]">
-              <label className="block mb-2 text-sm text-black">
-                {t("Title")}
-              </label>
-              <input
-                value={title}
-                onChange={(e) => {
-                  setTitle(e.target.value);
-                }}
-                type="text"
-                className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
-                placeholder={t("Title")}
-              />
-            </div>
-            <div className="w-full max-w-sm min-w-[200px]">
-              <label className="block mb-2 text-sm text-black">
-                {t("Image")}
-              </label>
-              <input
-                onChange={(e) => {
-                  setImage(e.target.files.item(0));
-                }}
-                type="file"
-                className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
-                placeholder={t("Image")}
-              />
-            </div>
+    <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/40 backdrop-blur-sm px-4 py-8">
+      <Card className="w-full max-w-2xl overflow-hidden shadow-2xl">
+        <div className="flex flex-col gap-2 border-b border-slate-200 bg-slate-50 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <CardTitle className="text-2xl">{t("Edit Category")}</CardTitle>
+            <CardDescription className="text-sm text-slate-500">
+              {t(
+                "Update the category details and upload a new image if needed.",
+              )}
+            </CardDescription>
           </div>
           <Button
-            className="mt-6 w-30 block ml-auto rounded-md bg-black py-1.5 px-3 border border-transparent  text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-800 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-            type="submit"
-            disabled={title.length <= 0}
+            variant="ghost"
+            className="h-10 w-10 rounded-full text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+            onClick={() => nav("/dashboard/categories")}
           >
-            {t("Save Changes")}
+            <MdClose className="h-5 w-5" />
           </Button>
-        </form>
-      </div>
+        </div>
+
+        <CardContent className="px-6 py-6">
+          <form className="grid gap-6" onSubmit={UpdateUser}>
+            <div className="grid gap-6 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="category-title">{t("Title")}</Label>
+                <Input
+                  id="category-title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  type="text"
+                  placeholder={t("Title")}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="category-image">{t("Image")}</Label>
+                <input
+                  id="category-image"
+                  onChange={(e) => setImage(e.target.files?.[0] || null)}
+                  type="file"
+                  accept="image/*"
+                  className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-100"
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-end">
+              <Button
+                type="submit"
+                disabled={title.length <= 0}
+                className="rounded-xl bg-slate-950 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-200/20 hover:bg-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {t("Save Changes")}
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

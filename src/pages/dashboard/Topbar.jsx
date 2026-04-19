@@ -1,25 +1,16 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { MdOutlineWbSunny } from "react-icons/md";
-import { MdOutlineSettings } from "react-icons/md";
 import { mainPath, USER } from "../../Api/Api";
 import { MdOutlineSpaceDashboard } from "react-icons/md";
 import Cookie from "cookie-universal";
 import { Navigate } from "react-router";
-import Logout from "../Auth/Logout";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useTranslation } from "react-i18next";
+import TranslateBtn from "@/components/Button/TranslateBtn";
+import AccountBtn from "@/components/Button/AccountBtn";
+import { Button } from "@/components/ui/button";
 
 export default function Topbar({ toggleSidebar }) {
   //states
@@ -60,38 +51,12 @@ export default function Topbar({ toggleSidebar }) {
           <Button className="rounded-xl hidden md:block">{t("Search")}</Button>
         </Field>
       </div>
-      <div className="flex items-center gap-7">
+      <div className="flex items-center gap-3">
+        <TranslateBtn />
         <div className=" rounded-full hover:bg-slate-200 p-1.5 cursor-pointer">
           <MdOutlineWbSunny className="text-[18px]" />
         </div>
-        <div className=" rounded-full hover:bg-slate-200 p-1.5 cursor-pointer">
-          <MdOutlineSettings className="text-[18px]" />
-        </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Avatar>
-              <AvatarImage
-                src="https://github.com/shadcn.png"
-                alt="shadcn"
-                className="p-2 rounded-full cursor-pointer"
-              />
-              <AvatarFallback>{user.toUpperCase().slice(0, 2)}</AvatarFallback>
-            </Avatar>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-35" align="end">
-            <DropdownMenuGroup>
-                <DropdownMenuItem>{t("Profile")}</DropdownMenuItem>
-                <DropdownMenuItem>{t("Billing")}</DropdownMenuItem>
-                <DropdownMenuItem>{t("Settings")}</DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem variant="destructive">
-                <Logout />
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <AccountBtn user={user} />
       </div>
     </div>
   );

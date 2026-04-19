@@ -16,6 +16,26 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+
+const roleMap = {
+  "1995": {
+    label: "Admin",
+    icon: <RiAdminLine className="text-slate-500 text-[16px]" />,
+  },
+  "2001": {
+    label: "User",
+    icon: <MdOutlinePerson className="text-slate-500 text-[16px]" />,
+  },
+  "1996": {
+    label: "Writer",
+    icon: <MdOutlinePersonalInjury className="text-slate-500 text-[16px]" />,
+  },
+  "1999": {
+    label: "Pro Manager",
+    icon: <MdShoppingBasket className="text-slate-500 text-[16px]" />,
+  },
+};
+
 export default function Table({
   header,
   data,
@@ -29,194 +49,185 @@ export default function Table({
   setPage,
   total,
 }) {
-  const currentuser = CurrentUser || false;
-  const nouser = noUser || false;
-  //delete user
+  const currentuser = CurrentUser || null;
+  const totalPages = total ? Math.ceil(total / limit) : 0;
+
   async function Delete(id) {
+    if (currentuser && id === currentuser.id) return;
+
     try {
-      await Axios.delete(`/${deletee}/${id}`).then((res) => {
-        rerand((prev) => !prev);
-      });
+      await Axios.delete(`/${deletee}/${id}`);
+      rerand((prev) => !prev);
     } catch (err) {
       console.log("cant delete admin");
     }
   }
-  //delete user
 
-  //change page
   function hanleChangepage() {
     setPage((prev) => prev + 1);
   }
+
   function hanldePrevPage() {
     setPage((prev) => prev - 1);
   }
-  //change page
-  //header table show
-  const headerShow = header.map((header) => {
-    return (
-      <th className="p-3 border-b border-slate-300 text-start">
-        <p className="block text-sm font-semibold leading-none text-black">
-          {header.name}
-        </p>
-      </th>
-    );
-  });
-  //header table show
 
-  const totalPages = Math.ceil(total / limit);
+  function renderCell(item, keyName) {
+    const value = item[keyName];
 
-  const filterData = data;
-  const datashow = filterData.map((item, key) => {
-    const admin = "admin";
-    const Roleuser = "user";
-    const whriter = "whriter";
-    const pro = "pro manger";
-    const imageProduct = item.images ? item.images : [];
-    const imageshow = imageProduct.map((img, index) => {
+    if (roleMap[value]) {
+      return (
+        <div className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-2 py-1 text-slate-700">
+          {roleMap[value].icon}
+          <span className="text-sm font-medium">{roleMap[value].label}</span>
+        </div>
+      );
+    }
+
+    if (keyName === "images") {
+      const images = Array.isArray(value) ? value : [];
+      return (
+        <div className={`flex ${images.length > 1 ? "flex-wrap gap-2" : "items-center"}`}>
+          {images.slice(0, 4).map((img, index) => (
+            <img
+              key={index}
+              src={img.image}
+              alt={`product-${index}`}
+              className="h-12 w-12 rounded-xl object-cover border border-slate-200"
+            />
+          ))}
+        </div>
+      );
+    }
+
+    if (keyName === "image") {
       return (
         <img
-          key={index}
-          src={img.image}
-          alt="product"
-          className="w-10 h-10 object-cover rounded"
+          src={value instanceof File ? URL.createObjectURL(value) : value}
+          alt="item"
+          className="h-12 w-12 rounded-xl object-cover border border-slate-200"
         />
       );
-    });
-    return (
-      <tr key={key} className=" hover:bg-slate-100">
-        {header.map((item2, key2) => {
-          return (
-            <td key={key2} className="p-3 border-b border-slate-200">
-              <p className="block text-sm text-black">
-                {item[item2.key] === "1995" ? (
-                  <div className="flex  items-center gap-1.5">
-                    <RiAdminLine className="text-slate-500 text-[14px]" />
-                    {admin}
-                  </div>
-                ) : item[item2.key] === "2001" ? (
-                  <div className="flex  items-center gap-1.5">
-                    <MdOutlinePerson className="text-[17px] text-slate-500" />
-                    {Roleuser}
-                  </div>
-                ) : item[item2.key] === "1996" ? (
-                  <div className="flex  items-center gap-1.5">
-                    <MdOutlinePersonalInjury className="text-[17px] text-slate-500" />
-                    {whriter}
-                  </div>
-                ) : item[item2.key] === "1999" ? (
-                  <div className="flex  items-center gap-1.5">
-                    <MdShoppingBasket className="text-[17px] text-slate-500" />
-                    {pro}
-                  </div>
-                ) : item2.key === "images" ? (
-                  <div
-                    className={`${imageshow.length > 1 ? "grid grid-cols-4 gap-2" : ""}`}
-                  >
-                    {imageshow}
-                  </div>
-                ) : item2.key === "image" ? (
-                  <img
-                    src={
-                      item[item2.key] instanceof File
-                        ? URL.createObjectURL(item[item2.key])
-                        : item[item2.key]
-                    }
-                    alt="image"
-                    className="w-10 h-10 object-cover rounded"
-                  />
-                ) : (
-                  item[item2.key]
-                )}
-                {currentuser && item[item2.key] === currentuser.name && " (me)"}
-              </p>
-            </td>
-          );
-        })}
-        {/* actoin fixed */}
-        <td className="p-3 border-b border-slate-200">
-          <div className="flex justify-center items-center gap-4">
-            <AiOutlineDelete
-              className={`${item.id === currentuser.id ? "text-gray-400" : "text-red-500"} ${item.id === currentuser.id ? "cursor-not-allowed" : "cursor-pointer"}`}
-              onClick={() => {
-                Delete(item.id);
-              }}
-            />
-            <Link to={`/dashboard/${add}/${item.id}`}>
-              <TbUserEdit className="text-slate-700 cursor-pointer" />
-            </Link>
-          </div>
+    }
+
+    return <span className="text-sm text-slate-700">{value}</span>;
+  }
+
+  const headerShow = header.map((column) => (
+    <th
+      key={column.key}
+      className="whitespace-nowrap px-4 py-4 text-left text-xs font-semibold uppercase tracking-[0.18em] text-slate-500"
+    >
+      {column.name}
+    </th>
+  ));
+
+  const datashow = data.map((item) => (
+    <tr
+      key={item.id ?? JSON.stringify(item)}
+      className="border-b border-slate-200 transition hover:bg-slate-50 even:bg-slate-50"
+    >
+      {header.map((column) => (
+        <td key={column.key} className="px-4 py-4 align-top">
+          {renderCell(item, column.key)}
         </td>
-        {/* actoin fixed */}
-      </tr>
-    );
-  });
-  //data table show
+      ))}
+      <td className="px-4 py-4 text-right align-top">
+        <div className="inline-flex items-center gap-3 rounded-full bg-slate-50 px-3 py-2">
+          <button
+            type="button"
+            title={item.id === currentuser?.id ? "Cannot delete your account" : "Delete item"}
+            onClick={() => Delete(item.id)}
+            className={`rounded-full p-2 transition-colors ${
+              item.id === currentuser?.id
+                ? "cursor-not-allowed text-slate-400"
+                : "text-red-500 hover:bg-red-50 hover:text-red-600"
+            }`}
+            disabled={item.id === currentuser?.id}
+          >
+            <AiOutlineDelete size={18} />
+          </button>
+          <Link
+            to={`/dashboard/${add}/${item.id}`}
+            className="rounded-full p-2 text-slate-700 transition hover:bg-slate-100 hover:text-slate-900"
+            title="Edit item"
+          >
+            <TbUserEdit size={18} />
+          </Link>
+        </div>
+      </td>
+    </tr>
+  ));
+
+  const isLoading = data.length === 0 && total === undefined;
+  const isEmpty = data.length === 0 && total !== undefined;
 
   return (
     <>
-      <div className="relative flex flex-col w-full shadow-[0px_0px_2px_0px_#0000002b] rounded-lg mt-5 max-h-[410px] overflow-scroll">
-        <table className="w-full table-auto min-w-max rounded-sm">
-          <thead className="hover:bg-slate-100">
-            <tr>
-              {headerShow}
-              <th className="p-3 border-b border-slate-300 text-center">
-                <p className="block text-sm font-semibold leading-none text-black">
-                  Actoin
-                </p>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.length === 0 ? ( // if date lenght is zero then show loading
-              <tr className=" bg-slate-100 text-black text-center">
-                <td colSpan={12} className=" animate-pulse p-1.5">
-                  loading ...
-                </td>
+      <div className="mt-5 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+        <div className="overflow-x-auto">
+          <table className="min-w-full">
+            <thead className="bg-slate-50">
+              <tr>
+                {headerShow}
+                <th className="whitespace-nowrap px-4 py-4 text-right text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                  Action
+                </th>
               </tr>
-            ) : data.length === 1 && nouser ? (
-              <tr className=" text-center bg-slate-100">
-                <td colSpan={12} className=" animate-pulse text-black p-1.5">
-                  No User Found
-                </td>
-              </tr>
-            ) : (
-              datashow
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {isLoading ? (
+                <tr className="bg-slate-50">
+                  <td colSpan={header.length + 1} className="py-12 text-center text-sm text-slate-500">
+                    Loading items...
+                  </td>
+                </tr>
+              ) : isEmpty ? (
+                <tr className="bg-slate-50">
+                  <td colSpan={header.length + 1} className="py-12 text-center text-sm text-slate-500">
+                    No records found.
+                  </td>
+                </tr>
+              ) : (
+                datashow
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
-      <Pagination className={"mt-3 mx-auto"}>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious
-              onClick={page > 1 ? hanldePrevPage : undefined}
-              aria-disabled={page === 1}
-              className={page === 1 ? "pointer-events-none opacity-50" : ""}
-            />
-          </PaginationItem>
-          {/* pages number */}
-          {Array.from({ length: Math.min(totalPages, 5) }).map((num, index) => (
-            <PaginationItem key={index}>
-              <PaginationLink
-                isActive={page === index + 1}
-                onClick={() => setPage(index + 1)}
-              >
-                {index + 1}
-              </PaginationLink>
-              {/* pages number */}
+
+      <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm text-slate-500">
+          Showing {data.length} of {total ?? data.length} items
+        </p>
+        <Pagination className="mx-auto sm:mx-0">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                onClick={page > 1 ? hanldePrevPage : undefined}
+                aria-disabled={page === 1}
+                className={page === 1 ? "pointer-events-none opacity-50" : ""}
+              />
             </PaginationItem>
-          ))}
-          <PaginationItem>
-            <PaginationNext
-              onClick={hanleChangepage}
-              aria-disabled={page === totalPages}
-              className={
-                page === totalPages ? "pointer-events-none opacity-50" : ""
-              }
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+            {Array.from({ length: Math.min(totalPages, 5) }).map((_, index) => (
+              <PaginationItem key={index}>
+                <PaginationLink
+                  isActive={page === index + 1}
+                  onClick={() => setPage(index + 1)}
+                >
+                  {index + 1}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+            <PaginationItem>
+              <PaginationNext
+                onClick={hanleChangepage}
+                aria-disabled={page === totalPages}
+                className={page === totalPages ? "pointer-events-none opacity-50" : ""}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </div>
     </>
   );
 }

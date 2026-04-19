@@ -1,4 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -14,16 +20,14 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useEffect, useRef, useState } from "react";
-import { MdOutlineAddPhotoAlternate } from "react-icons/md";
-import { CAT, PRODUCT, PRODUCTS } from "@/Api/Api";
+import { MdOutlineAddPhotoAlternate, MdOutlineCancel } from "react-icons/md";
+import { CAT, PRODUCT } from "@/Api/Api";
 import { Axios } from "@/Api/Axios";
 import { useNavigate } from "react-router-dom";
 import Loading from "@/pages/Loading";
-import { MdOutlineCancel } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 
 export default function AddPro() {
-  //states
   const [FormDataa, setFormData] = useState({
     category: "",
     title: "",
@@ -33,42 +37,25 @@ export default function AddPro() {
     About: "",
     Stock: "0",
   });
-  const fakedata = {
-    category: null,
-    title: "dummy",
-    description: "des",
-    price: 222,
-    discount: 0,
-    About: "About",
-    Stock: "0",
-  };
   const [id, setID] = useState("");
   const [load, setLoad] = useState(false);
   const [images, setImages] = useState([]);
   const [imageId, setImgId] = useState([]);
   const [categories, setCat] = useState([]);
   const [upload, setUpload] = useState([]);
-  const foucus = useRef("");
-  const openImage = useRef(false);
+  const focus = useRef(null);
+  const openImage = useRef(null);
   const nav = useNavigate();
   const { t } = useTranslation();
-  //states
 
-  // show categories in select
-  const showcat = categories.map((cat, index) => {
-    return (
-      <SelectItem key={index} value={String(cat.id)}>
-        {cat.title}
-      </SelectItem>
-    );
-  });
-  //show categories in select
+  const showcat = categories.map((cat) => (
+    <SelectItem key={cat.id} value={String(cat.id)}>
+      {cat.title}
+    </SelectItem>
+  ));
 
-  //show images after add
-
-  //effect
   useEffect(() => {
-    foucus.current.focus();
+    focus.current?.focus();
   }, []);
 
   useEffect(() => {
@@ -80,41 +67,44 @@ export default function AddPro() {
         console.log(err);
       });
   }, []);
-  //effect
 
-  //func
   async function handleProductEdit(e) {
+    e.preventDefault();
+    setLoad(true);
+
     try {
-      setLoad(true);
-      e.preventDefault();
-      await Axios.post(`/${PRODUCT}/edit/${id}`, FormDataa).then((res) => {
-        console.log(res);
-        setLoad(false);
-        nav("/dashboard/product");
-      });
+      await Axios.post(`/${PRODUCT}/edit/${id}`, FormDataa);
+      nav("/dashboard/product");
     } catch (err) {
       console.log(err);
+    } finally {
       setLoad(false);
     }
   }
-  //func
+
   async function handleSubmitForm() {
     try {
-      await Axios.post(`${PRODUCT}/add`, fakedata).then((res) => {
-        setID(res.data.id);
+      const { data } = await Axios.post(`${PRODUCT}/add`, {
+        category: FormDataa.category,
+        title: FormDataa.title || "New Product",
+        description: FormDataa.description || "",
+        price: FormDataa.price || 0,
+        discount: FormDataa.discount || 0,
+        About: FormDataa.About || "",
+        Stock: FormDataa.Stock || 0,
       });
+      setID(data.id);
     } catch (err) {
       console.log(err);
     }
   }
-  //fucn
+
   function handleopenSelectImage() {
-    openImage.current.click();
+    openImage.current?.click();
   }
-  //fucn
-  //fucn
+
   async function handleimagesend(e) {
-    const files = Array.from(e.target.files);
+    const files = Array.from(e.target.files || []);
     setImages((prev) => [...prev, ...files]);
     const startIndex = images.length;
 
@@ -123,14 +113,14 @@ export default function AddPro() {
       data.append("image", files[i]);
       data.append("product_id", id);
       try {
-        const res = await Axios.post("/product-img/add", data, {
+        await Axios.post("/product-img/add", data, {
           onUploadProgress: (progresEvent) => {
-            const load = progresEvent.loaded;
+            const loaded = progresEvent.loaded;
             const total = progresEvent.total;
-            const persent = Math.floor((load * 100) / total);
+            const percent = Math.floor((loaded * 100) / total);
             setUpload((prev) => {
               const copy = [...prev];
-              copy[startIndex + i] = persent;
+              copy[startIndex + i] = percent;
               return copy;
             });
           },
@@ -142,212 +132,208 @@ export default function AddPro() {
       }
     }
   }
-  //fucn
 
-  // func
   async function handledeletimage(ide, imgNow) {
     try {
-      await Axios.delete(`product-img/${ide}`).then((res) => {
-        setImgId((prev) => prev.filter((id) => id !== ide));
-        setImages((prev) =>
-          prev.filter((img) => {
-            return img !== imgNow;
-          }),
-        );
-      });
+      await Axios.delete(`product-img/${ide}`);
+      setImgId((prev) => prev.filter((item) => item !== ide));
+      setImages((prev) => prev.filter((img) => img !== imgNow));
     } catch (err) {
       console.log(err);
     }
   }
-  // func
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{t("Add New Product")}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form className="space-y-6" onSubmit={handleProductEdit}>
-          {/* Category Select */}
+    <div className="">
+      <Card className="w-full">
+        <div className="flex flex-col gap-2 border-b border-slate-200 bg-slate-50 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <Label htmlFor="category">{t("Category")}</Label>
-            <Select
-              value={FormDataa.category}
-              onValueChange={(value) => {
-                setFormData({ ...FormDataa, category: value });
-                handleSubmitForm();
-              }}
-            >
-              ,
-              <SelectTrigger className=" mt-1" ref={foucus}>
-                <SelectValue placeholder={t("Select a category")} />
-              </SelectTrigger>
-              <SelectContent>{showcat}</SelectContent>
-            </Select>
+            <CardTitle>{t("Add New Product")}</CardTitle>
+            <CardDescription>
+              {t(
+                "Fill the product details and upload images to create a new product.",
+              )}
+            </CardDescription>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* title */}
-            <div>
-              <Label htmlFor="name">{t("Title")}</Label>
-              <Input
-                id="name"
-                disabled={FormDataa.category === ""}
-                className="mt-1"
-                placeholder={t("Product Name")}
-                value={FormDataa.title}
-                onChange={(e) =>
-                  setFormData({ ...FormDataa, title: e.target.value })
-                }
-              />
+        </div>
+
+        <CardContent className="space-y-6 px-6 py-6">
+          <form className="space-y-6" onSubmit={handleProductEdit}>
+            <div className="space-y-3">
+              <Label htmlFor="category">{t("Category")}</Label>
+              <Select
+                value={FormDataa.category}
+                onValueChange={(value) => {
+                  setFormData({ ...FormDataa, category: value });
+                  handleSubmitForm();
+                }}
+              >
+                <SelectTrigger className="mt-1 w-full" ref={focus}>
+                  <SelectValue placeholder={t("Select a category")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem>{t("Select a category")}</SelectItem>
+                  {showcat}
+                </SelectContent>
+              </Select>
             </div>
-            {/* title */}
 
-            {/* about */}
-            <div>
-              <Label htmlFor="sku">{t("About")}</Label>
-              <Input
-                disabled={FormDataa.category === ""}
-                id="sku"
-                className="mt-1"
-                placeholder={t("About the product")}
-                value={FormDataa.About}
-                onChange={(e) =>
-                  setFormData({ ...FormDataa, About: e.target.value })
-                }
-              />
+            <div className="grid gap-6 lg:grid-cols-2">
+              <div className="space-y-3">
+                <Label htmlFor="title">{t("Title")}</Label>
+                <Input
+                  id="title"
+                  value={FormDataa.title}
+                  disabled={FormDataa.category === ""}
+                  placeholder={t("Product Name")}
+                  onChange={(e) =>
+                    setFormData({ ...FormDataa, title: e.target.value })
+                  }
+                />
+              </div>
+              <div className="space-y-3">
+                <Label htmlFor="about">{t("About")}</Label>
+                <Input
+                  id="about"
+                  value={FormDataa.About}
+                  disabled={FormDataa.category === ""}
+                  placeholder={t("Short summary")}
+                  onChange={(e) =>
+                    setFormData({ ...FormDataa, About: e.target.value })
+                  }
+                />
+              </div>
             </div>
-            {/* about */}
-          </div>
 
-          {/* text area */}
-          <div>
-            <Label htmlFor="description">{t("Description")}</Label>
-            <Textarea
-              disabled={FormDataa.category === ""}
-              id="description"
-              className="mt-1"
-              placeholder={t("Product Description")}
-              value={FormDataa.description}
-              onChange={(e) =>
-                setFormData({ ...FormDataa, description: e.target.value })
-              }
-            />
-          </div>
-
-          {/* ===== Pricing Section ===== */}
-
-          <div className="grid grid-cols-2 gap-6">
-            <div>
-              <Label>{t("Base Price")}</Label>
-              <Input
+            <div className="space-y-3">
+              <Label htmlFor="description">{t("Description")}</Label>
+              <Textarea
+                id="description"
+                value={FormDataa.description}
                 disabled={FormDataa.category === ""}
-                type="number"
-                className="mt-1"
-                step="10"
-                placeholder={t("0")}
-                value={FormDataa.price}
+                placeholder={t("Product Description")}
                 onChange={(e) =>
-                  setFormData({ ...FormDataa, price: e.target.value })
+                  setFormData({ ...FormDataa, description: e.target.value })
                 }
               />
             </div>
 
-            <div>
-              <Label>{t("Discount")} (%)</Label>
-              <Input
-                disabled={FormDataa.category === ""}
-                type="number"
-                className="mt-1"
-                placeholder={t("Optional")}
-                value={FormDataa.discount}
-                onChange={(e) =>
-                  setFormData({ ...FormDataa, discount: e.target.value })
-                }
-              />
+            <div className="grid gap-6 lg:grid-cols-3">
+              <div className="space-y-3">
+                <Label htmlFor="price">{t("Base Price")}</Label>
+                <Input
+                  id="price"
+                  type="number"
+                  value={FormDataa.price}
+                  disabled={FormDataa.category === ""}
+                  placeholder="0"
+                  onChange={(e) =>
+                    setFormData({ ...FormDataa, price: e.target.value })
+                  }
+                />
+              </div>
+              <div className="space-y-3">
+                <Label htmlFor="discount">{t("Discount")} (%)</Label>
+                <Input
+                  id="discount"
+                  type="number"
+                  value={FormDataa.discount}
+                  disabled={FormDataa.category === ""}
+                  placeholder={t("Optional")}
+                  onChange={(e) =>
+                    setFormData({ ...FormDataa, discount: e.target.value })
+                  }
+                />
+              </div>
+              <div className="space-y-3">
+                <Label htmlFor="stock">{t("Stock")}</Label>
+                <Input
+                  id="stock"
+                  type="number"
+                  value={FormDataa.Stock}
+                  disabled={FormDataa.category === ""}
+                  placeholder={t("Optional")}
+                  onChange={(e) =>
+                    setFormData({ ...FormDataa, Stock: e.target.value })
+                  }
+                />
+              </div>
             </div>
 
-            <div>
-              <Label>{t("Stock")}</Label>
+            <div className="space-y-4">
+              <Label>{t("Product Images")}</Label>
+              <div
+                className="cursor-pointer rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-6 text-center transition hover:border-slate-400 hover:bg-slate-100"
+                onClick={handleopenSelectImage}
+              >
+                <MdOutlineAddPhotoAlternate className="mx-auto mb-4 text-[30px] text-slate-500" />
+                <p className="text-sm text-slate-500">
+                  {t("Upload one or more product images")}
+                </p>
+              </div>
               <Input
-                disabled={FormDataa.category === ""}
-                type="number"
-                className="mt-1"
-                placeholder={t("Optional")}
-                value={FormDataa.Stock}
-                onChange={(e) =>
-                  setFormData({ ...FormDataa, Stock: e.target.value })
-                }
-              />
-            </div>
-          </div>
-
-          {/* ===== Images Upload ===== */}
-          <div className="space-y-3">
-            <Label>{t("Product Images")}</Label>
-
-            <div
-              className="border-2 border-dashed rounded-lg p-6 text-center"
-              onClick={handleopenSelectImage}
-            >
-              <p className="text-sm text-muted-foreground mt-2 mb-5">
-                <MdOutlineAddPhotoAlternate className="mx-auto mb-4 cursor-pointer text-[30px]" />
-                {t("Upload one or more product images")}
-              </p>
-              <Input
-                disabled={FormDataa.category === ""}
                 ref={openImage}
                 multiple
                 accept="image/*"
                 type="file"
-                className="cursor-pointer w-[200px] mx-auto text-center text-sm hidden"
+                className="hidden"
                 onChange={handleimagesend}
               />
             </div>
-            {/* edit image and send before add product */}
+
             {images.length > 0 && (
-              <div className="flex flex-col gap-4">
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {images.map((img, index) => (
-                  <div key={index} className="relative flex gap-2 items-center">
-                    <div className=" relative">
+                  <div
+                    key={index}
+                    className="overflow-hidden rounded-3xl border border-slate-200 bg-white p-4 shadow-sm"
+                  >
+                    <div className="relative mb-4 h-28 overflow-hidden rounded-3xl bg-slate-100">
                       <img
                         src={URL.createObjectURL(img)}
-                        alt={t(`Preview ${index + 1}`)}
-                        className="w-20 h-20 object-cover rounded"
+                        alt={`Preview ${index + 1}`}
+                        className="h-full w-full object-cover"
                       />
-                      <MdOutlineCancel
-                        className=" absolute top-[-5px] right-[-5px] text-black cursor-pointer rounded-lg text-[18px] bg-white"
-                        onClick={() => {
-                          handledeletimage(imageId[index], img);
-                        }}
+                      <button
+                        type="button"
+                        className="absolute right-2 top-2 rounded-full bg-white p-1 shadow-sm"
+                        onClick={() => handledeletimage(imageId[index], img)}
+                      >
+                        <MdOutlineCancel className="h-5 w-5 text-slate-700" />
+                      </button>
+                    </div>
+                    <p className="mb-2 text-sm text-slate-600">
+                      {(img.size * 10 ** -6).toFixed(2)} MB
+                    </p>
+                    <Field className="w-full">
+                      <FieldLabel htmlFor={`progress-upload-${index}`}>
+                        <span className="text-xs text-slate-500">
+                          {t("Upload progress")}
+                        </span>
+                        <span className="ml-auto text-xs text-slate-500">
+                          {upload[index] || 0}%
+                        </span>
+                      </FieldLabel>
+                      <Progress
+                        value={upload[index] || 0}
+                        id={`progress-upload-${index}`}
                       />
-                    </div>
-                    <div className=" w-full">
-                      <p>{(img.size * 10 ** -6).toFixed(2)} MB</p>
-                      <Field className="w-full max-w-sm">
-                        <FieldLabel htmlFor="progress-upload">
-                          <span className="text-[12px]">{t("Upload progress")}</span>
-                          <span className="ml-auto">{upload[index] || 0}%</span>
-                        </FieldLabel>
-                        <Progress
-                          value={upload[index] || 0}
-                          id="progress-upload"
-                        />
-                      </Field>
-                    </div>
+                    </Field>
                   </div>
                 ))}
               </div>
             )}
-          </div>
-          {/* edit image and send before add product */}
 
-          {/* Submit Button */}
-          <Button type="submit" className="w-full">
-            {t("Save Product")}
-          </Button>
-        </form>
-      </CardContent>
+            <Button
+              type="submit"
+              className="w-full rounded-xl bg-slate-950 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-200/20 hover:bg-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {t("Save Product")}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
       {load && <Loading />}
-    </Card>
+    </div>
   );
 }

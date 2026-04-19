@@ -89,7 +89,7 @@ export default function HomePage() {
   return (
     <div className="md:shadow-[0px_0px_2px_0px_#0000006b] rounded-xl md:m-1.5 ">
       <NavBar />
-      <section className="from-background to-accent/20 relative bg-linear-to-b">
+      <section className="from-background to-accent/20 relative bg-linear-to-b mt-5 md:mt-0">
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 py-16 md:px-8 lg:px-12 lg:py-20">
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
             <header className="space-y-8">

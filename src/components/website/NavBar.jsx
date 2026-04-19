@@ -20,10 +20,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Logout from "@/pages/Auth/Logout";
-import { Menu, Globe } from "lucide-react";
+import { Menu } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Badge } from "@/components/ui/badge";
+import TranslateBtn from "../Button/TranslateBtn";
+import AccountBtn from "../Button/AccountBtn";
 
 const list = [
   { name: "STORE", href: "/ProductWeb" },
@@ -31,15 +32,10 @@ const list = [
   { name: "OFFERS", href: "" },
 ];
 export default function NavBar() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [categories, setCategories] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const nav = useNavigate();
-
-  const toggleLanguage = () => {
-    const newLang = i18n.language === "en" ? "ar" : "en";
-    i18n.changeLanguage(newLang);
-  };
 
   useEffect(() => {
     Axios.get(`${CAT}`).then((res) => {
@@ -191,52 +187,11 @@ export default function NavBar() {
           </Sheet>
         </div>
         <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={toggleLanguage}
-            className="hover:bg-gray-100 flex items-center gap-2 px-3 py-1"
-          >
-            <Globe className="w-4 h-4" />
-            <Badge variant="secondary" className="text-xs">
-              {i18n.language.toUpperCase()}
-            </Badge>
-          </Button>
+          <TranslateBtn />
           <Link to={"/shopping"}>
-            <MdOutlineShoppingCart className="w-6 h-6 cursor-pointer" />
+            <MdOutlineShoppingCart className="w-[20px] h-[20px] cursor-pointer" />
           </Link>
-          {/* <MdOutlineAccountCircle className="w-6 h-6 text-black cursor-pointer" /> */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Avatar>
-                <AvatarImage
-                  src="https://github.com/shadcn.png"
-                  alt="shadcn"
-                  className="p-2 rounded-full cursor-pointer"
-                />
-                <AvatarFallback>
-                  {/* {user.toUpperCase().slice(0, 2)} */}
-                </AvatarFallback>
-              </Avatar>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-48" align="start">
-              <DropdownMenuGroup>
-                <DropdownMenuItem asChild>
-                  <Link to="/login" className="cursor-pointer">
-                    {t("Log In")}
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/signin" className="cursor-pointer">
-                    {t("Create Account")}
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem variant="destructive">
-                  <Logout />
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <AccountBtn user={""} />
         </div>
       </div>
     </div>
