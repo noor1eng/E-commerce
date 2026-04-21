@@ -216,7 +216,7 @@ export default function EditProduct() {
   }
 
   return (
-    <Card className="overflow-hidden shadow-2xl">
+    <Card className="overflow-hidden">
       <CardHeader className="bg-slate-50 px-6 py-6">
         <CardTitle>{t("Edit Your Product")}</CardTitle>
         <CardDescription>

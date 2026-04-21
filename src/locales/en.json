@@ -188,6 +188,21 @@
   "Our Collection" : "Our Collection",
   "Showing" : "Showing",
   "product" : "product",
-  "Total Products" : "Total Products"
+  "Total Products" : "Total Products",
+    "No products found" : "No products found",
+  "Try adjusting your search or filter" : "Try adjusting your search or filter",
+  "Limited Time":" Limited Time",
+  "Hot Deals" : "Hot Deals",
+  "Ends in" : "Ends in",
+  "Max Discount" : "Max Discount",
+  "Active Deals": "Active Deals" ,
+  "Avg. Saving" : "Avg. Saving" ,
+  "View All Deals" : "View All Deals",
+  "Create a new user account and assign the correct role." : "Create a new user account and assign the correct role.",
+  "Update the user details and save your changes." : "Update the user details and save your changes.",
+  "Update the category details and save your changes." : "Update the category details and save, your changes.",
+  "Update product details, pricing and images from one view."  : "Update product details, pricing and images from one view.",
+  "Fill the product details and upload images to create a new product." : "Fill the product details and upload images to create a new product.",
+  "Avg. Rating" : "Avg. Rating"
 
 }

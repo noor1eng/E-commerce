@@ -55,7 +55,7 @@ export default function AddUser() {
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/40 px-4 py-8 backdrop-blur-sm">
       <Card className="w-full max-w-2xl overflow-hidden shadow-2xl">
-        <CardHeader className="flex items-start justify-between gap-4 border-b border-slate-200 bg-slate-50 px-6 py-5">
+        <div className="flex items-start justify-between gap-4 border-b border-slate-200 bg-slate-50 px-6 py-5">
           <div>
             <CardTitle className="text-2xl">{t("Add New User")}</CardTitle>
             <CardDescription className="text-sm text-slate-500">
@@ -69,7 +69,7 @@ export default function AddUser() {
           >
             <MdClose className="h-5 w-5" />
           </Button>
-        </CardHeader>
+        </div>
 
         <CardContent className="px-6 py-6">
           <form className="grid gap-6" onSubmit={Adduser}>
@@ -104,7 +104,9 @@ export default function AddUser() {
                   id="password"
                   type="password"
                   value={Form.password}
-                  onChange={(e) => setForm({ ...Form, password: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...Form, password: e.target.value })
+                  }
                   placeholder={t("Your Password")}
                 />
               </div>

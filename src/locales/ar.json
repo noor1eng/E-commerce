@@ -189,5 +189,20 @@
   "Our Collection" : "مجموعتنا",
   "Showing" : "عرض",
   "products" : "منتجات",
-  "Total Products" : "جميع المنتجات"
+  "Total Products" : "جميع المنتجات",
+  "No products found" : "لم يتم العثور على منتجات",
+  "Try adjusting your search or filter" : "حاول ضبط بحثك أو التصفية",
+  "Limited Time":"وقت محدود",
+  "Hot Deals" : "عروض حصريه",
+  "Ends in" : "ينهتي في",
+  "Max Discount" : "اقصى حسم",
+  "Active Deals":  " العروض النشطة", 
+  "Avg. Saving" : " متوسط التوفير", 
+  "View All Deals" : " عرض جميع العروض",
+  "Create a new user account and assign the correct role." : "قم بإنشاء حساب مستخدم جديد وتعيين الدور الصحيح.",
+  "Update the user details and save your changes." : "قم بتحديث تفاصيل المستخدم وحفظ التغييرات الخاصة بك.",
+  "Create a new category and upload a category image." : "قم بإنشاء فئة جديدة وتحميل صورة الفئة.",
+  "Update product details, pricing and images from one view." : "قم بتحديث تفاصيل المنتج والأسعار والصور من عرض واحد.",
+  "Fill the product details and upload images to create a new product." : "املأ تفاصيل المنتج وحمّل الصور لإنشاء منتج جديد.",
+  "Avg. Rating" : "متوسط التقييم"
 }

@@ -66,18 +66,6 @@ export default function NavBar() {
 
   return (
     <>
-      <style>{`
-        @keyframes nb-slide-down { from { opacity:0; transform:translateY(-8px) } to { opacity:1; transform:translateY(0) } }
-        @keyframes nb-fade-in    { from { opacity:0 } to { opacity:1 } }
-        .nb-link { position:relative; }
-        .nb-link::after {
-          content:''; position:absolute; bottom:-2px; left:0;
-          width:0; height:1.5px; background:#111827;
-          transition: width 0.25s ease;
-        }
-        .nb-link:hover::after, .nb-link.active::after { width:100%; }
-      `}</style>
-
       {/* ── NAVBAR ── */}
       <nav
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
@@ -117,7 +105,8 @@ export default function NavBar() {
             style={{
               display: "flex",
               alignItems: "center",
-              gap: 4,
+              justifyItems: "center",
+              gap: 20,
             }}
             className="hidden md:flex"
           >
@@ -285,7 +274,7 @@ export default function NavBar() {
 
           {/* ── Right actions ── */}
           <div
-            className=" md:flex hidden"
+            className=" md:flex hidden "
             style={{ alignItems: "center", gap: 12 }}
           >
             <TranslateBtn />
@@ -344,7 +333,6 @@ export default function NavBar() {
                 </span>
               )}
             </Link>
-
             <AccountBtn user="" />
           </div>
           {/* Mobile hamburger */}

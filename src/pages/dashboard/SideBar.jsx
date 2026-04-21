@@ -2,15 +2,16 @@ import { useState, useEffect } from "react";
 import { MdOutlineSpaceDashboard } from "react-icons/md";
 import { MdOutlineDashboard } from "react-icons/md";
 import { MdOutlinePersonOutline } from "react-icons/md";
-import { MdOutlineShoppingCart } from "react-icons/md";
 import { MdOutlineCategory } from "react-icons/md";
 import { useTranslation } from "react-i18next";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { MdOutlineShoppingCart } from "react-icons/md";
 
 export default function SideBar({ isOpen, toggleSidebar }) {
   const [active, setActive] = useState("");
   const location = useLocation();
   const { t } = useTranslation();
+  const nav = useNavigate();
 
   // keep the active menu item in sync with the current URL so that
   // refreshing the page or landing directly on a route still highlights
@@ -49,10 +50,24 @@ export default function SideBar({ isOpen, toggleSidebar }) {
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4">
-          {isOpen && <h2 className="text-lg font-bold">{t("Admin")}</h2>}
-          <button onClick={toggleSidebar} className="md:hidden">
-            <MdOutlineSpaceDashboard className="text-[20px] cursor-pointer text-black border border-solid border-gray-300 rounded-md p-1 hover:bg-slate-100" />
-          </button>
+          {isOpen ? (
+            <h2 className="text-lg font-bold flex items-center gap-2">
+              {t("Admin")}{" "}
+              <div className=" w-[30px] h-[30px] rounded-[10px] bg-[#111827] flex items-center justify-center">
+                <MdOutlineShoppingCart
+                  className="text-[#fff] text-[18px] cursor-pointer"
+                  onClick={() => nav("/")}
+                />
+              </div>
+            </h2>
+          ) : (
+            <div className=" w-[30px] h-[30px] rounded-[10px] bg-[#111827] flex items-center justify-center">
+              <MdOutlineShoppingCart
+                className="text-[#fff] text-[18px] cursor-pointer"
+                onClick={() => nav("/")}
+              />
+            </div>
+          )}
         </div>
 
         {/* Navigation */}

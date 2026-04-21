@@ -208,14 +208,9 @@ function DealCard({ pro, onAddToCart }) {
 
         {/* Add to cart hover btn */}
         <button
+          className=" absolute bottom-2 right-2 size-8 rounded-full flex items-center justify-center transition-colors duration-200"
           onClick={handleAdd}
           style={{
-            position: "absolute",
-            bottom: 10,
-            right: 10,
-            width: 34,
-            height: 34,
-            borderRadius: "50%",
             background: added ? "#1D9E75" : "#fff",
             color: added ? "#fff" : "#374151",
             border: "none",

@@ -1,31 +1,125 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag, ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight, LayoutGrid } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Axios } from "@/Api/Axios";
 import { CAT } from "@/Api/Api";
 import { Link } from "react-router-dom";
 import NavBar from "@/components/website/NavBar";
-import Skel from "@/pages/website/Skel";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import PaginationCom from "../pagination/Pagination";
 import { useTranslation } from "react-i18next";
+import { cn } from "@/lib/utils";
 
+/* ── Skeleton card ── */
+function SkeletonCard() {
+  return (
+    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white animate-pulse">
+      <div className="aspect-[5/4] bg-slate-100" />
+      <div className="p-4 space-y-2">
+        <div className="h-4 w-1/2 rounded-md bg-slate-100" />
+        <div className="h-3 w-1/3 rounded-md bg-slate-100" />
+      </div>
+    </div>
+  );
+}
+
+/* ── Category card ── */
+function CategoryCard({ cat }) {
+  const [hovered, setHovered] = useState(false);
+  const { t } = useTranslation();
+
+  return (
+    <div
+      className="group block focus:outline-none cursor-pointer focus-visible:ring-2 focus-visible:ring-slate-900 rounded-2xl"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <div
+        className={cn(
+          "overflow-hidden rounded-2xl border bg-white transition-all duration-300",
+          hovered
+            ? "border-slate-300 shadow-lg -translate-y-1"
+            : "border-slate-200 shadow-sm translate-y-0",
+        )}
+      >
+        {/* Image */}
+        <div className="relative aspect-[5/4] overflow-hidden bg-slate-100">
+          <img
+            src={cat.image}
+            alt={cat.title}
+            className={cn(
+              "size-full object-cover transition-transform duration-500",
+              hovered ? "scale-105" : "scale-100",
+            )}
+          />
+
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+
+          {/* Top-left count badge */}
+          {cat.count > 0 && (
+            <span className="absolute top-3 left-3 inline-flex items-center rounded-full bg-white/90 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-slate-700 shadow-sm">
+              {cat.count} {t("items")}
+            </span>
+          )}
+
+          {/* Trending badge */}
+          {cat.trending && (
+            <span className="absolute top-3 right-3 inline-flex items-center rounded-full bg-orange-500 px-2.5 py-1 text-xs font-semibold text-white shadow-sm">
+              🔥 {t("Trending")}
+            </span>
+          )}
+
+          {/* Bottom overlay: title + button */}
+          <div className="absolute inset-x-0 bottom-0 p-4">
+            <h3 className="text-lg font-semibold text-white drop-shadow mb-2 truncate">
+              {cat.title}
+            </h3>
+            <div
+              className={cn(
+                "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all duration-300",
+                hovered
+                  ? "bg-white text-slate-900"
+                  : "bg-white/20 text-white backdrop-blur-sm",
+              )}
+            >
+              {t("Shop Now")}
+              <ArrowUpRight
+                className={cn(
+                  "size-3 transition-transform duration-300",
+                  hovered ? "translate-x-0.5 -translate-y-0.5" : "",
+                )}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Card footer */}
+        <div className="flex items-center justify-between px-4 py-3">
+          <p className="text-xs text-slate-400 truncate max-w-[70%]">
+            {t("Explore our collection")}
+          </p>
+          <ArrowRight
+            className={cn(
+              "size-3.5 text-slate-400 transition-all duration-300 shrink-0",
+              hovered ? "translate-x-1 text-slate-700" : "",
+            )}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Main page ── */
 export default function CategorieWeb() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(9);
-  const [total, setTotal] = useState();
+  const [limit] = useState(9);
+  const [total, setTotal] = useState(0);
   const totalPages = Math.ceil(total / limit);
   const { t } = useTranslation();
+
   useEffect(() => {
     setLoading(true);
     Axios.get(`/${CAT}?limit=${limit}&page=${page}`)
@@ -34,117 +128,87 @@ export default function CategorieWeb() {
         setTotal(res.data.total);
         window.scrollTo({ top: 0, behavior: "smooth" });
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, [page, limit]);
 
-  function hanleChangepage() {
-    setPage((prev) => prev + 1);
-  }
-  function hanldePrevPage() {
-    setPage((prev) => prev - 1);
-  }
-
-  const showCat = categories.map((cat) => {
-    return (
-      <Card className="group cursor-pointer overflow-hidden py-0 transition-all duration-500 hover:shadow-xl hover:-translate-y-1 border-0 bg-white/80 backdrop-blur-sm">
-        <div className="relative aspect-[5/4] overflow-hidden">
-          <img
-            src={cat.image}
-            alt={cat.title}
-            className="size-full object-cover transition-transform duration-500 group-hover:scale-110"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-
-          {/* Trending Badge */}
-          {cat.trending && (
-            <Badge className="absolute top-4 left-4 bg-orange-500 hover:bg-orange-600 text-white">
-              {t("Trending")}
-            </Badge>
-          )}
-
-          {/* Category Info Overlay */}
-          <div className="absolute right-0 bottom-0 left-0 p-6 text-white">
-            <h3 className="mb-2 text-2xl font-bold text-white drop-shadow-lg">
-              {cat.title}
-            </h3>
-            <p className="mb-4 text-sm text-white/90 drop-shadow-md">
-              {t("Explore our collection")}
-            </p>
-            <Button
-              size="sm"
-              className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm transition-all duration-300 group-hover:bg-white group-hover:text-black"
-            >
-              {t("Shop Now")}
-              <ArrowRight className="ml-2 size-4 transition-transform group-hover:translate-x-1" />
-            </Button>
-          </div>
-        </div>
-      </Card>
-    );
-  });
   return (
     <>
       <NavBar />
-      <div className="md:shadow-[0px_0px_2px_0px_#0000003b] rounded-xl md:m-1.5 bg-gradient-to-br from-slate-50 via-white to-slate-100 min-h-screen">
-        <section className="py-12 mt-20">
-          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-            {/* Header */}
-            <div className="mb-12 text-center">
-              <h2 className="text-4xl font-bold tracking-tight text-balance bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+      <div className="min-h-screen bg-slate-50">
+        <section className="mx-auto max-w-6xl px-4 pt-28 pb-16 sm:px-6 lg:px-8">
+          {/* ── Header ── */}
+          <div className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-slate-400">
+                {t("Browse")}
+              </p>
+              <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
                 {t("Shop by Category")}
-              </h2>
-              <p className="text-muted-foreground mt-4 text-lg">
+              </h1>
+              <p className="mt-2 text-sm text-slate-500 max-w-md leading-relaxed">
                 {t("Discover products across our most popular categories")}
               </p>
             </div>
 
-            {/* Categories Grid */}
-            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {categories.length > 0 ? showCat : loading && <Skel />}
+            {/* Stats strip */}
+            <div className="flex shrink-0 items-center gap-6">
+              {[
+                { label: t("Categories"), value: total || "—" },
+                { label: t("Page"), value: `${page} / ${totalPages || "—"}` },
+              ].map((s) => (
+                <div key={s.label} className="text-center">
+                  <p className="text-xl font-bold text-slate-800">{s.value}</p>
+                  <p className="text-xs text-slate-400">{s.label}</p>
+                </div>
+              ))}
             </div>
           </div>
-          <Pagination className={"mt-3 mx-auto"}>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  onClick={page > 1 ? hanldePrevPage : undefined}
-                  aria-disabled={page === 1}
-                  className={page === 1 ? "pointer-events-none opacity-50" : ""}
-                />
-              </PaginationItem>
-              {/* pages number */}
-              {Array.from({ length: Math.min(totalPages, 5) }).map(
-                (num, index) => (
-                  <PaginationItem key={index}>
-                    <PaginationLink
-                      isActive={page === index + 1}
-                      onClick={() => setPage(index + 1)}
-                    >
-                      {index + 1}
-                    </PaginationLink>
-                    {/* pages number */}
-                  </PaginationItem>
-                ),
-              )}
-              <PaginationItem>
-                <PaginationNext
-                  onClick={hanleChangepage}
-                  aria-disabled={page === totalPages}
-                  className={
-                    page === totalPages ? "pointer-events-none opacity-50" : ""
-                  }
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-          {/* Call to Action */}
-          <div className="mt-12 text-center">
-            <Link to={"/"}>
-              <Button size="lg" className="cursor-pointer gap-2">
-                <ShoppingBag className="size-5" />
-                {t("Back to Shopping")}
+
+          {/* Thin divider */}
+          <div className="mb-8 h-px bg-slate-200" />
+
+          {/* ── Grid ── */}
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {loading ? (
+              Array.from({ length: 9 }).map((_, i) => <SkeletonCard key={i} />)
+            ) : categories.length > 0 ? (
+              categories.map((cat) => <CategoryCard key={cat.id} cat={cat} />)
+            ) : (
+              <div className="col-span-full flex flex-col items-center justify-center py-24 gap-4 text-center">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100">
+                  <LayoutGrid className="size-6 text-slate-400" />
+                </div>
+                <p className="text-base font-semibold text-slate-700">
+                  {t("No categories found")}
+                </p>
+                <p className="text-sm text-slate-400">
+                  {t("Check back soon for new collections")}
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* ── Pagination ── */}
+          {totalPages > 1 && (
+            <div className="mt-10">
+              <PaginationCom
+                totalPages={totalPages}
+                page={page}
+                setPage={setPage}
+              />
+            </div>
+          )}
+
+          {/* ── CTA ── */}
+          <div className="mt-12 flex justify-center">
+            <Link to="/">
+              <Button
+                size="lg"
+                variant="outline"
+                className="gap-2 rounded-full border-slate-300 text-slate-600 hover:border-slate-900 hover:bg-slate-900 hover:text-white transition-all duration-200"
+              >
+                ← {t("Back to Shopping")}
               </Button>
             </Link>
           </div>

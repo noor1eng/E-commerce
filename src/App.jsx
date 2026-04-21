@@ -24,12 +24,13 @@ import ProductShop from "./components/website/product/ProductShop";
 import ShoppingCart from "./components/website/shopping/Shopping";
 import { Toaster } from "@/components/ui/sonner";
 import TopRated from "./components/toprated/TopRated";
+import ErrorPage1 from "./pages/Eror404";
 function App() {
   return (
     <div className="App">
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="*" element={<Erro404 />} />
+        <Route path="*" element={<ErrorPage1 />} />
         <Route path="/topRated" element={<TopRated />} />
         <Route path="/CategorieWeb" element={<CategorieWeb />} />
         <Route path="/ProductWeb" element={<ProductWeb />} />
@@ -46,7 +47,14 @@ function App() {
         <Route
           element={<ProtectRoute allowedRole={["1995", "1996", "1999"]} />}
         >
-          <Route path="/dashboard" element={<Dashboard />}>
+          <Route
+            path="/dashboard"
+            element={
+              <>
+                <Dashboard />
+              </>
+            }
+          >
             {/* solve users loading */}
             <Route element={<ProtectRoute allowedRole={["1995"]} />}>
               <Route path="dashboardlayout" element={<Dashboardlayout />} />

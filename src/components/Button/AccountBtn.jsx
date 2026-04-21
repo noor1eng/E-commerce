@@ -20,7 +20,7 @@ export default function AccountBtn({ user }) {
           <AvatarImage
             src="https://github.com/shadcn.png"
             alt="shadcn"
-            className="p-2 rounded-full cursor-pointer w-10 h-10"
+            className="p-2 rounded-full cursor-pointer md:w-10 md:h-10 w-20"
           />
           <AvatarFallback>{user.toUpperCase().slice(0, 2)}</AvatarFallback>
         </Avatar>

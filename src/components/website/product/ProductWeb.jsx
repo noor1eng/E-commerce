@@ -103,7 +103,7 @@ function ProductCard({ pro, rank, onAddToCart }) {
       <RankBadge rank={rank} />
 
       {pro.discount > 0 && (
-        <div className="absolute top-2.5 right-2.5 bg-red-500 text-red-50 text-xs font-semibold px-2.25 py-0.5 rounded-full z-10 tracking-tighter">
+        <div className="absolute top-2.5 right-2.5 bg-red-500 text-red-50 text-xs font-semibold p-1 rounded-full z-10 tracking-tighter">
           −${pro.discount}
         </div>
       )}
@@ -127,23 +127,9 @@ function ProductCard({ pro, rank, onAddToCart }) {
           <button
             onClick={handleAdd}
             title={t("Add to Cart")}
-            className={`w-8 h-8 rounded-full border-none cursor-pointer flex items-center justify-center text-sm shadow-md transition-all ${
-              added ? "bg-green-600 text-white" : "bg-white text-gray-700"
-            }`}
+            className={`w-8 h-8 rounded-full border-none cursor-pointer flex items-center justify-center text-sm shadow-md transition-all bg-white hover:bg-black hover:text-white `}
           >
-            {added ? "✓" : <ShoppingCart size={14} />}
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setWishlisted((w) => !w);
-            }}
-            title="Wishlist"
-            className={`w-8 h-8 rounded-full bg-white border-none cursor-pointer flex items-center justify-center text-sm shadow-md transition-colors ${
-              wishlisted ? "text-red-500" : "text-gray-700"
-            }`}
-          >
-            {wishlisted ? "♥" : "♡"}
+            {<ShoppingCart size={14} />}
           </button>
         </div>
       </div>
@@ -155,9 +141,7 @@ function ProductCard({ pro, rank, onAddToCart }) {
         </p>
         <p
           title={pro.title}
-          className={`text-sm font-medium line-clamp-2 leading-snug mb-2 transition-colors ${
-            hovered ? "text-indigo-600" : "text-gray-900"
-          }`}
+          className={`text-sm font-medium line-clamp-2 leading-snug mb-2 transition-colors ${"text-gray-900"}`}
         >
           {pro.title}
         </p>
@@ -204,7 +188,6 @@ export default function ProductWeb() {
 
   const [total, setTotal] = useState(0);
   const [search, setSearch] = useState("");
-  const [activeCategory, setActiveCategory] = useState("all");
   const [categories, setCategories] = useState([]);
   const totalPages = Math.ceil(total / limit);
   const showToast = useSonner();
@@ -238,10 +221,6 @@ export default function ProductWeb() {
   }
 
   const visible = products.filter((p) => p.images?.length > 0);
-  const allCats = [
-    { key: "all", label: t("All") },
-    ...categories.map((c) => ({ key: c.id.toString(), label: c.title })),
-  ];
 
   return (
     <>
@@ -311,7 +290,7 @@ export default function ProductWeb() {
                 placeholder={t("Search products...")}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full h-9.5 pl-8 pr-3 rounded-full border border-gray-200 bg-white text-xs text-gray-900 placeholder-gray-400 outline-none"
+                className="w-full h-9.5 pl-8 p-4  rounded-full border border-gray-200 bg-white text-xs text-gray-900 placeholder-gray-400 outline-none"
               />
             </div>
           </div>
