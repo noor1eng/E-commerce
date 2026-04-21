@@ -23,12 +23,14 @@ import ProductWeb from "./components/website/product/ProductWeb";
 import ProductShop from "./components/website/product/ProductShop";
 import ShoppingCart from "./components/website/shopping/Shopping";
 import { Toaster } from "@/components/ui/sonner";
+import TopRated from "./components/toprated/TopRated";
 function App() {
   return (
     <div className="App">
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="*" element={<Erro404 />} />
+        <Route path="/topRated" element={<TopRated />} />
         <Route path="/CategorieWeb" element={<CategorieWeb />} />
         <Route path="/ProductWeb" element={<ProductWeb />} />
         <Route path="/productShop/:id" element={<ProductShop />} />

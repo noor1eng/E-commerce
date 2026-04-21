@@ -9,191 +9,640 @@ import {
 import { useEffect, useState } from "react";
 import { Axios } from "@/Api/Axios";
 import { CAT } from "@/Api/Api";
-import { Button } from "../ui/button";
-import { Link, useNavigate } from "react-router-dom";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import Logout from "@/pages/Auth/Logout";
-import { Menu } from "lucide-react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Menu, X, ArrowUpRight, ChevronRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import TranslateBtn from "../Button/TranslateBtn";
 import AccountBtn from "../Button/AccountBtn";
 
-const list = [
-  { name: "STORE", href: "/ProductWeb" },
-  { name: "COLLECTION", href: "" },
-  { name: "OFFERS", href: "" },
+/* ── inject fonts once ── */
+if (!document.getElementById("nb-fonts")) {
+  const l = document.createElement("link");
+  l.id = "nb-fonts";
+  l.rel = "stylesheet";
+  l.href =
+    "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@600&display=swap";
+  document.head.appendChild(l);
+}
+
+const NAV_LINKS = [
+  { name: "STORE", to: "/ProductWeb" },
+  { name: "COLLECTION", dropdown: true },
+  { name: "TOP RATED", to: "/topRated" },
 ];
+
 export default function NavBar() {
   const { t } = useTranslation();
   const [categories, setCategories] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
   const nav = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    Axios.get(`${CAT}`).then((res) => {
-      setCategories(res.data.slice(0, 5));
-    });
+    Axios.get(`${CAT}`).then((res) => setCategories(res.data.slice(0, 6)));
   }, []);
 
-  const showCat = categories.map((cat) => {
-    return (
-      <div
-        key={cat.id}
-        to={`/products?category=${cat.id}`}
-        className="group relative overflow-hidden rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg"
-        title={cat.title}
-      >
-        <img
-          src={cat.image}
-          alt={cat.title}
-          className="w-16 h-16 object-cover rounded-lg border-2 border-transparent group-hover:border-gray-300 transition-all duration-300"
-        />
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 rounded-lg flex items-center justify-center">
-          <span className="text-white font-medium text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            {cat.title}
-          </span>
-        </div>
-      </div>
-    );
-  });
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 12);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const cart = JSON.parse(localStorage.getItem("product") || "[]");
+    setCartCount(cart.reduce((s, i) => s + (i.quantity || 1), 0));
+  }, [location]);
+
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
+
+  const isActive = (to) => location.pathname === to;
 
   return (
-    <div className="fixed top-0 left-0 w-full z-50 bg-white/70 backdrop-blur shadow-[0px_0px_10px_0px_#0000001a]">
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <div className="flex items-center">
-          <Link to={"/"}>
-            <MdOutlineShoppingCart className="w-8 h-8 text-black" />
+    <>
+      <style>{`
+        @keyframes nb-slide-down { from { opacity:0; transform:translateY(-8px) } to { opacity:1; transform:translateY(0) } }
+        @keyframes nb-fade-in    { from { opacity:0 } to { opacity:1 } }
+        .nb-link { position:relative; }
+        .nb-link::after {
+          content:''; position:absolute; bottom:-2px; left:0;
+          width:0; height:1.5px; background:#111827;
+          transition: width 0.25s ease;
+        }
+        .nb-link:hover::after, .nb-link.active::after { width:100%; }
+      `}</style>
+
+      {/* ── NAVBAR ── */}
+      <nav
+        className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+        style={{
+          background: scrolled
+            ? "rgba(255,255,255,0.92)"
+            : "rgba(255,255,255,0.75)",
+          backdropFilter: "blur(14px)",
+          borderBottom: scrolled
+            ? "1px solid #e5e7eb"
+            : "1px solid transparent",
+          boxShadow: scrolled ? "0 1px 16px rgba(0,0,0,0.06)" : "none",
+          fontFamily: "'DM Sans', sans-serif",
+        }}
+      >
+        <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+          {/* ── Logo ── */}
+          <Link
+            to="/"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 13,
+              textDecoration: "none",
+            }}
+          >
+            <div className=" w-[30px] h-[30px] rounded-[10px] bg-[#111827] flex items-center justify-center">
+              <MdOutlineShoppingCart className="text-[#fff] text-[18px]" />
+            </div>
+            <span className="text-[18px] font-semibold text-[#111827] tracking-[-0.01em]">
+              N7LY
+            </span>
           </Link>
-          <span className="ml-2 text-xl font-bold">N7LY</span>
-        </div>
-        {/* Desktop Menu */}
-        <div className="hidden md:flex mx-auto bg-transparent items-center gap-5">
-          {list.map((item, index) =>
-            item.name === "COLLECTION" ? (
-              <NavigationMenu key={index}>
-                <NavigationMenuList>
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger>
-                      {t(item.name)}
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <div className="p-6 w-[300px]">
-                        <div className="grid grid-cols-3 gap-4">{showCat}</div>
-                        <Button
-                          variant="outline"
-                          className="w-full mt-4"
-                          onClick={() => nav("/CategorieWeb")}
-                        >
-                          {t("View All")}
-                        </Button>
-                      </div>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-                </NavigationMenuList>
-              </NavigationMenu>
-            ) : item.name === "STORE" ? (
-              <Link
-                key={index}
-                to={"/ProductWeb"}
-                className={`${"text-black"} mx-4 text-md font-medium hover:bg-gray-100 rounded-md px-4 py-1 transition-colors duration-300`}
-              >
-                {t(item.name)}
-              </Link>
-            ) : (
-              <a
-                key={index}
-                href={item.href}
-                className={`${"text-black"} mx-4 text-md font-medium hover:bg-gray-100 rounded-md px-4 py-1 transition-colors duration-300`}
-              >
-                {t(item.name)}
-              </a>
-            ),
-          )}
-        </div>
-        {/* Mobile Menu Trigger */}
-        <div className="md:hidden">
-          <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Menu className="h-6 w-6" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-              <div className="flex flex-col gap-4 mt-6">
-                {list.map((item, index) =>
-                  item.name === "COLLECTION" ? (
-                    <div key={index}>
-                      <h3 className="text-lg font-semibold mb-2">
-                        {t(item.name)}
-                      </h3>
-                      <div className="grid grid-cols-3 gap-3">
-                        {categories.map((cat) => (
-                          <Link
-                            key={cat.id}
-                            to={`/products?category=${cat.id}`}
-                            className="group relative overflow-hidden rounded-lg transition-all duration-300 hover:scale-105"
-                            onClick={() => setIsOpen(false)}
-                            title={cat.title}
-                          >
-                            <img
-                              src={cat.image}
-                              alt={cat.title}
-                              className="w-12 h-12 object-cover rounded-lg border-2 border-transparent group-hover:border-gray-300 transition-all duration-300"
-                            />
-                          </Link>
-                        ))}
-                      </div>
-                      <Button
-                        variant="outline"
-                        className="w-full mt-4"
-                        onClick={() => {
-                          nav("/CategorieWeb");
-                          setIsOpen(false);
+
+          {/* ── Desktop links ── */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 4,
+            }}
+            className="hidden md:flex"
+          >
+            {NAV_LINKS.map((item) =>
+              item.dropdown ? (
+                <NavigationMenu key={item.name}>
+                  <NavigationMenuList>
+                    <NavigationMenuItem>
+                      <NavigationMenuTrigger
+                        style={{
+                          fontFamily: "'DM Sans', sans-serif",
+                          fontSize: 13,
+                          fontWeight: 500,
+                          color: "#374151",
+                          letterSpacing: "0.04em",
+                          background: "transparent",
+                          padding: "6px 12px",
                         }}
                       >
-                        {t("View All")}
-                      </Button>
-                    </div>
-                  ) : item.name === "STORE" ? (
-                    <Link
-                      key={index}
-                      to={"/ProductWeb"}
-                      className="text-black text-md font-medium hover:bg-gray-100 rounded-md px-4 py-2 transition-colors duration-300"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      {item.name}
-                    </Link>
-                  ) : (
-                    <a
-                      key={index}
-                      href={item.href}
-                      className="text-black text-md font-medium hover:bg-gray-100 rounded-md px-4 py-2 transition-colors duration-300"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      {item.name}
-                    </a>
-                  ),
-                )}
+                        {t(item.name)}
+                      </NavigationMenuTrigger>
+                      <NavigationMenuContent>
+                        <div
+                          style={{
+                            padding: "1.25rem",
+                            width: 340,
+                            animation: "nb-slide-down 0.2s ease",
+                            fontFamily: "'DM Sans', sans-serif",
+                          }}
+                        >
+                          <p
+                            style={{
+                              fontSize: 10,
+                              fontWeight: 600,
+                              letterSpacing: "0.12em",
+                              textTransform: "uppercase",
+                              color: "#9ca3af",
+                              marginBottom: 12,
+                            }}
+                          >
+                            {t("Browse Categories")}
+                          </p>
+                          <div
+                            style={{
+                              display: "grid",
+                              gridTemplateColumns: "repeat(3, 1fr)",
+                              gap: 10,
+                            }}
+                          >
+                            {categories.map((cat) => (
+                              <Link
+                                key={cat.id}
+                                to={`/products?category=${cat.id}`}
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  alignItems: "center",
+                                  gap: 6,
+                                  padding: "8px 4px",
+                                  borderRadius: 10,
+                                  border: "1px solid #f3f4f6",
+                                  textDecoration: "none",
+                                  transition:
+                                    "border-color 0.15s, background 0.15s",
+                                  background: "#fff",
+                                }}
+                                onMouseOver={(e) => {
+                                  e.currentTarget.style.borderColor = "#d1d5db";
+                                  e.currentTarget.style.background = "#f9fafb";
+                                }}
+                                onMouseOut={(e) => {
+                                  e.currentTarget.style.borderColor = "#f3f4f6";
+                                  e.currentTarget.style.background = "#fff";
+                                }}
+                              >
+                                <img
+                                  src={cat.image}
+                                  alt={cat.title}
+                                  style={{
+                                    width: 52,
+                                    height: 52,
+                                    objectFit: "cover",
+                                    borderRadius: 8,
+                                  }}
+                                />
+                                <span
+                                  style={{
+                                    fontSize: 11,
+                                    fontWeight: 500,
+                                    color: "#374151",
+                                    textAlign: "center",
+                                    lineHeight: 1.3,
+                                  }}
+                                >
+                                  {cat.title}
+                                </span>
+                              </Link>
+                            ))}
+                          </div>
+                          <button
+                            onClick={() => nav("/CategorieWeb")}
+                            style={{
+                              width: "100%",
+                              marginTop: 14,
+                              padding: "9px 0",
+                              borderRadius: 100,
+                              border: "1px solid #e5e7eb",
+                              background: "#fff",
+                              color: "#374151",
+                              fontSize: 13,
+                              fontWeight: 500,
+                              cursor: "pointer",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              gap: 4,
+                              fontFamily: "'DM Sans', sans-serif",
+                              transition: "all 0.15s",
+                            }}
+                            onMouseOver={(e) => {
+                              e.currentTarget.style.background = "#111827";
+                              e.currentTarget.style.color = "#fff";
+                              e.currentTarget.style.borderColor = "#111827";
+                            }}
+                            onMouseOut={(e) => {
+                              e.currentTarget.style.background = "#fff";
+                              e.currentTarget.style.color = "#374151";
+                              e.currentTarget.style.borderColor = "#e5e7eb";
+                            }}
+                          >
+                            {t("View All Categories")}{" "}
+                            <ArrowUpRight size={13} />
+                          </button>
+                        </div>
+                      </NavigationMenuContent>
+                    </NavigationMenuItem>
+                  </NavigationMenuList>
+                </NavigationMenu>
+              ) : (
+                <Link
+                  key={item.name}
+                  to={item.to}
+                  className={`nb-link${isActive(item.to) ? " active" : ""}`}
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 500,
+                    color: isActive(item.to) ? "#111827" : "#6b7280",
+                    textDecoration: "none",
+                    padding: "6px 12px",
+                    borderRadius: 8,
+                    letterSpacing: "0.03em",
+                    transition: "color 0.15s",
+                  }}
+                  onMouseOver={(e) => (e.currentTarget.style.color = "#111827")}
+                  onMouseOut={(e) => {
+                    if (!isActive(item.to))
+                      e.currentTarget.style.color = "#6b7280";
+                  }}
+                >
+                  {t(item.name)}
+                </Link>
+              ),
+            )}
+          </div>
+
+          {/* ── Right actions ── */}
+          <div
+            className=" md:flex hidden"
+            style={{ alignItems: "center", gap: 12 }}
+          >
+            <TranslateBtn />
+
+            {/* Cart icon */}
+            <Link
+              to="/shopping"
+              style={{ position: "relative", display: "flex" }}
+            >
+              <div
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 10,
+                  border: "1px solid #e5e7eb",
+                  background: "#fff",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  transition: "border-color 0.15s, background 0.15s",
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.borderColor = "#111827";
+                  e.currentTarget.style.background = "#f9fafb";
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.borderColor = "#e5e7eb";
+                  e.currentTarget.style.background = "#fff";
+                }}
+              >
+                <MdOutlineShoppingCart
+                  style={{ fontSize: 17, color: "#374151" }}
+                />
               </div>
-            </SheetContent>
-          </Sheet>
+              {cartCount > 0 && (
+                <span
+                  style={{
+                    position: "absolute",
+                    top: -5,
+                    right: -5,
+                    width: 17,
+                    height: 17,
+                    borderRadius: "50%",
+                    background: "#E24B4A",
+                    color: "#fff",
+                    fontSize: 10,
+                    fontWeight: 700,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    border: "2px solid #fff",
+                  }}
+                >
+                  {cartCount > 9 ? "9+" : cartCount}
+                </span>
+              )}
+            </Link>
+
+            <AccountBtn user="" />
+          </div>
+          {/* Mobile hamburger */}
+          <button
+            className=" md:hidden flex"
+            onClick={() => setMobileOpen(true)}
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: 10,
+              border: "1px solid #e5e7eb",
+              background: "#fff",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+            }}
+          >
+            <Menu size={18} color="#374151" />
+          </button>
         </div>
-        <div className="flex items-center gap-4">
+      </nav>
+
+      {/* ── MOBILE DRAWER ── */}
+      {/* Backdrop */}
+      {mobileOpen && (
+        <div
+          onClick={() => setMobileOpen(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 60,
+            background: "rgba(0,0,0,0.35)",
+            backdropFilter: "blur(2px)",
+            animation: "nb-fade-in 0.2s ease",
+          }}
+        />
+      )}
+
+      {/* Drawer panel */}
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          right: 0,
+          bottom: 0,
+          width: 300,
+          zIndex: 70,
+          background: "#fff",
+          boxShadow: "-4px 0 24px rgba(0,0,0,0.1)",
+          transform: mobileOpen ? "translateX(0)" : "translateX(100%)",
+          transition: "transform 0.3s cubic-bezier(0.4,0,0.2,1)",
+          display: "flex",
+          flexDirection: "column",
+          fontFamily: "'DM Sans', sans-serif",
+          overflowY: "auto",
+        }}
+      >
+        {/* Drawer header */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "18px 20px",
+            borderBottom: "1px solid #f3f4f6",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: 9,
+                background: "#111827",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <MdOutlineShoppingCart style={{ color: "#fff", fontSize: 16 }} />
+            </div>
+            <span
+              style={{
+                fontSize: 18,
+                fontWeight: 600,
+                color: "#111827",
+              }}
+            >
+              N7LY
+            </span>
+          </div>
+          <button
+            onClick={() => setMobileOpen(false)}
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: 8,
+              border: "1px solid #e5e7eb",
+              background: "#fff",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+            }}
+          >
+            <X size={15} color="#374151" />
+          </button>
+        </div>
+
+        {/* Drawer nav links */}
+        <div
+          style={{
+            padding: "16px 16px 0",
+            display: "flex",
+            flexDirection: "column",
+            gap: 4,
+          }}
+        >
+          {NAV_LINKS.filter((i) => !i.dropdown).map((item) => (
+            <Link
+              key={item.name}
+              to={item.to}
+              onClick={() => setMobileOpen(false)}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "12px 14px",
+                borderRadius: 12,
+                background: isActive(item.to) ? "#f3f4f6" : "transparent",
+                textDecoration: "none",
+                color: isActive(item.to) ? "#111827" : "#374151",
+                fontSize: 14,
+                fontWeight: isActive(item.to) ? 600 : 400,
+                transition: "background 0.15s",
+              }}
+              onMouseOver={(e) => {
+                if (!isActive(item.to))
+                  e.currentTarget.style.background = "#f9fafb";
+              }}
+              onMouseOut={(e) => {
+                if (!isActive(item.to))
+                  e.currentTarget.style.background = "transparent";
+              }}
+            >
+              {t(item.name)}
+              <ChevronRight size={15} color="#9ca3af" />
+            </Link>
+          ))}
+        </div>
+
+        {/* Categories in drawer */}
+        <div style={{ padding: "20px 16px" }}>
+          <p
+            style={{
+              fontSize: 10,
+              fontWeight: 600,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              color: "#9ca3af",
+              marginBottom: 12,
+            }}
+          >
+            {t("COLLECTION")}
+          </p>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 8,
+            }}
+          >
+            {categories.map((cat) => (
+              <Link
+                key={cat.id}
+                to={`/products?category=${cat.id}`}
+                onClick={() => setMobileOpen(false)}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 5,
+                  padding: "8px 4px",
+                  borderRadius: 10,
+                  border: "1px solid #f3f4f6",
+                  textDecoration: "none",
+                  background: "#fff",
+                }}
+              >
+                <img
+                  src={cat.image}
+                  alt={cat.title}
+                  style={{
+                    width: 46,
+                    height: 46,
+                    objectFit: "cover",
+                    borderRadius: 8,
+                  }}
+                />
+                <span
+                  style={{
+                    fontSize: 10,
+                    fontWeight: 500,
+                    color: "#374151",
+                    textAlign: "center",
+                  }}
+                >
+                  {cat.title}
+                </span>
+              </Link>
+            ))}
+          </div>
+          <button
+            onClick={() => {
+              nav("/CategorieWeb");
+              setMobileOpen(false);
+            }}
+            style={{
+              width: "100%",
+              marginTop: 12,
+              padding: "10px 0",
+              borderRadius: 100,
+              border: "1px solid #e5e7eb",
+              background: "#fff",
+              color: "#374151",
+              fontSize: 13,
+              fontWeight: 500,
+              cursor: "pointer",
+              fontFamily: "'DM Sans', sans-serif",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 4,
+            }}
+          >
+            {t("View All")} <ArrowUpRight size={13} />
+          </button>
+        </div>
+
+        {/* Drawer bottom */}
+        <div
+          style={{
+            marginTop: "auto",
+            padding: "16px 16px 24px",
+            borderTop: "1px solid #f3f4f6",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
           <TranslateBtn />
-          <Link to={"/shopping"}>
-            <MdOutlineShoppingCart className="w-[20px] h-[20px] cursor-pointer" />
+          <Link
+            to="/shopping"
+            onClick={() => setMobileOpen(false)}
+            style={{ position: "relative" }}
+          >
+            <div
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: 10,
+                border: "1px solid #e5e7eb",
+                background: "#f9fafb",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <MdOutlineShoppingCart
+                style={{ fontSize: 17, color: "#374151" }}
+              />
+            </div>
+            {cartCount > 0 && (
+              <span
+                style={{
+                  position: "absolute",
+                  top: -4,
+                  right: -4,
+                  width: 16,
+                  height: 16,
+                  borderRadius: "50%",
+                  background: "#E24B4A",
+                  color: "#fff",
+                  fontSize: 9,
+                  fontWeight: 700,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "2px solid #fff",
+                }}
+              >
+                {cartCount > 9 ? "9+" : cartCount}
+              </span>
+            )}
           </Link>
-          <AccountBtn user={""} />
+          <AccountBtn user="" />
         </div>
       </div>
-    </div>
+    </>
   );
 }
