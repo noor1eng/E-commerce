@@ -1,5 +1,5 @@
 export const mainPath =
-  "https://spectacular-wonder-production-261d.up.railway.app/api";
+  "https://gregarious-courage-production.up.railway.app/api";
 export const Register = "register";
 export const Login = "login";
 export const LogoutPath = "logout";
