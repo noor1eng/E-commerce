@@ -1,4 +1,5 @@
-export const mainPath = "http://127.0.0.1:8000/api";
+export const mainPath =
+  "https://spectacular-wonder-production-261d.up.railway.app/api";
 export const Register = "register";
 export const Login = "login";
 export const LogoutPath = "logout";
