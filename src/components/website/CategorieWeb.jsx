@@ -202,7 +202,7 @@ export default function CategorieWeb() {
 
           {/* ── CTA ── */}
           <div className="mt-12 flex justify-center">
-            <Link to="/">
+            <Link to="/ProductWeb">
               <Button
                 size="lg"
                 variant="outline"

@@ -9,9 +9,13 @@ import {
 import Logout from "@/pages/Auth/Logout";
 import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import Cookie from "cookie-universal";
 
 export default function AccountBtn({ user }) {
   const { t } = useTranslation();
+  const cookie = Cookie();
+  const token = cookie.get("e-commerce");
 
   return (
     <DropdownMenu>
@@ -26,17 +30,34 @@ export default function AccountBtn({ user }) {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-35" align="end">
-        <DropdownMenuGroup>
-          <DropdownMenuItem>{t("Profile")}</DropdownMenuItem>
-          <DropdownMenuItem>{t("Billing")}</DropdownMenuItem>
-          <DropdownMenuItem>{t("Settings")}</DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem variant="destructive">
-            <Logout />
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
+        {token === undefined ? (
+          <DropdownMenuGroup>
+            <Link to={"/signin"}>
+              <DropdownMenuItem className="cursor-pointer">
+                {t("Sign In")}
+              </DropdownMenuItem>
+            </Link>
+            <Link to={"/login"}>
+              <DropdownMenuItem className="cursor-pointer">
+                {t("Log In")}
+              </DropdownMenuItem>
+            </Link>
+          </DropdownMenuGroup>
+        ) : (
+          <>
+            <DropdownMenuGroup>
+              <DropdownMenuItem className="cursor-pointer">
+                {t("Profile")}
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem variant="destructive">
+                <Logout />
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -8,7 +8,6 @@ import ProtectRoute from "./pages/Auth/RequireAuth";
 import Edituser from "./components/dashboard/Edituser";
 import AddUser from "./components/dashboard/Adduser";
 import Whriter from "./components/dashboard/Whriter";
-import Erro404 from "./pages/Eror404";
 import RequireBack from "./pages/Auth/RequireBack";
 import Dashboardlayout from "./pages/dashboard/Dashboardlayout";
 import Catigories from "./components/dashboard/Categories";
@@ -25,16 +24,19 @@ import ShoppingCart from "./components/website/shopping/Shopping";
 import { Toaster } from "@/components/ui/sonner";
 import TopRated from "./components/toprated/TopRated";
 import ErrorPage1 from "./pages/Eror404";
+import WebPages from "./pages/WebPages/WebPages";
 function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="" element={<WebPages />}>
+          <Route path="" element={<HomePage />} />
+          <Route path="topRated" element={<TopRated />} />
+          <Route path="CategorieWeb" element={<CategorieWeb />} />
+          <Route path="ProductWeb" element={<ProductWeb />} />
+        </Route>
+        <Route path="productShop/:id" element={<ProductShop />} />
         <Route path="*" element={<ErrorPage1 />} />
-        <Route path="/topRated" element={<TopRated />} />
-        <Route path="/CategorieWeb" element={<CategorieWeb />} />
-        <Route path="/ProductWeb" element={<ProductWeb />} />
-        <Route path="/productShop/:id" element={<ProductShop />} />
         <Route path="/shopping" element={<ShoppingCart />} />
         {/* protect userback */}
         <Route element={<RequireBack />}>

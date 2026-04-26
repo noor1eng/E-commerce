@@ -23,7 +23,7 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { useState, useEffect } from "react";
-import NavBar from "./NavBar";
+import NavBar from "../../components/website/NavBar";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Axios } from "@/Api/Axios";
@@ -288,7 +288,7 @@ function DealCard({ pro, onAddToCart }) {
             )}
           </div>
           <Link
-            to={`/productShop/${pro.id}`}
+            to={`productShop/${pro.id}`}
             onClick={(e) => e.stopPropagation()}
           >
             <button

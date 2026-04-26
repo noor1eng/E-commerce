@@ -101,15 +101,7 @@ export default function NavBar() {
           </Link>
 
           {/* ── Desktop links ── */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyItems: "center",
-              gap: 20,
-            }}
-            className="hidden md:flex"
-          >
+          <div className="items-center md:gap-8 gap-1 flex">
             {NAV_LINKS.map((item) =>
               item.dropdown ? (
                 <NavigationMenu key={item.name}>
@@ -442,6 +434,77 @@ export default function NavBar() {
           </button>
         </div>
 
+        {/* Top actions - Cart & Account */}
+        <div
+          style={{
+            padding: "16px 16px",
+            borderBottom: "1px solid #f3f4f6",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 12,
+          }}
+        >
+          <Link
+            to="/shopping"
+            onClick={() => setMobileOpen(false)}
+            style={{ position: "relative", flex: 1 }}
+          >
+            <div
+              style={{
+                width: "100%",
+                padding: "12px 16px",
+                borderRadius: 10,
+                border: "1px solid #e5e7eb",
+                background: "#f9fafb",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
+                cursor: "pointer",
+                transition: "all 0.15s",
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.background = "#111827";
+                e.currentTarget.style.borderColor = "#111827";
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.background = "#f9fafb";
+                e.currentTarget.style.borderColor = "#e5e7eb";
+              }}
+            >
+              <MdOutlineShoppingCart
+                style={{ fontSize: 18, color: "#374151" }}
+              />
+              <span style={{ fontSize: 13, fontWeight: 500, color: "#374151" }}>
+                السلة
+              </span>
+              {cartCount > 0 && (
+                <span
+                  style={{
+                    marginLeft: "auto",
+                    width: 20,
+                    height: 20,
+                    borderRadius: "50%",
+                    background: "#E24B4A",
+                    color: "#fff",
+                    fontSize: 11,
+                    fontWeight: 700,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {cartCount > 9 ? "9+" : cartCount}
+                </span>
+              )}
+            </div>
+          </Link>
+          <div style={{ flex: 1 }}>
+            <AccountBtn user="" />
+          </div>
+        </div>
+
         {/* Drawer nav links */}
         <div
           style={{
@@ -580,55 +643,10 @@ export default function NavBar() {
             borderTop: "1px solid #f3f4f6",
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
+            justifyContent: "center",
           }}
         >
           <TranslateBtn />
-          <Link
-            to="/shopping"
-            onClick={() => setMobileOpen(false)}
-            style={{ position: "relative" }}
-          >
-            <div
-              style={{
-                width: 36,
-                height: 36,
-                borderRadius: 10,
-                border: "1px solid #e5e7eb",
-                background: "#f9fafb",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <MdOutlineShoppingCart
-                style={{ fontSize: 17, color: "#374151" }}
-              />
-            </div>
-            {cartCount > 0 && (
-              <span
-                style={{
-                  position: "absolute",
-                  top: -4,
-                  right: -4,
-                  width: 16,
-                  height: 16,
-                  borderRadius: "50%",
-                  background: "#E24B4A",
-                  color: "#fff",
-                  fontSize: 9,
-                  fontWeight: 700,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  border: "2px solid #fff",
-                }}
-              >
-                {cartCount > 9 ? "9+" : cartCount}
-              </span>
-            )}
-          </Link>
-          <AccountBtn user="" />
         </div>
       </div>
     </>

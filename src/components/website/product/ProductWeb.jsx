@@ -164,7 +164,7 @@ function ProductCard({ pro, rank, onAddToCart }) {
             onClick={(e) => e.stopPropagation()}
           >
             <button
-              className={`flex items-center gap-1 text-xs font-medium px-3 py-1.25 rounded-full border transition-all ${
+              className={`flex items-center gap-1 text-xs font-medium py-2 px-3 rounded-full border transition-all ${
                 hovered
                   ? "bg-gray-900 text-white border-gray-900"
                   : "bg-white text-gray-600 border-gray-200"
