@@ -6,11 +6,13 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+import Cookie from "cookie-universal";
+
 import { useEffect, useState } from "react";
 import { Axios } from "@/Api/Axios";
 import { CAT } from "@/Api/Api";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Menu, X, ArrowUpRight, ChevronRight } from "lucide-react";
+import { Menu, X, ArrowUpRight, ChevronRight, LogOut } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import TranslateBtn from "../Button/TranslateBtn";
 import AccountBtn from "../Button/AccountBtn";
@@ -33,6 +35,10 @@ const NAV_LINKS = [
 ];
 
 export default function NavBar() {
+  const cookie = Cookie();
+  const token = cookie.get("e-commerce");
+  console.log(token);
+
   const { t } = useTranslation();
   const [categories, setCategories] = useState([]);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -492,14 +498,18 @@ export default function NavBar() {
               )}
             </div>
           </Link>
-          <div className=" flex justify-center items-start flex-col gap-2">
-            <Link to={"/login"}>
-              <Button>{t("Log In")}</Button>
-            </Link>
-            <Link to={"/signin"}>
-              <Button>{t("Sign In")}</Button>
-            </Link>
-          </div>
+          {token == undefined ? (
+            <div className=" flex justify-center items-start flex-col gap-2">
+              <Link to={"/login"}>
+                <Button>{t("Log In")}</Button>
+              </Link>
+              <Link to={"/signin"}>
+                <Button>{t("Sign In")}</Button>
+              </Link>
+            </div>
+          ) : (
+            <LogOut />
+          )}
         </div>
 
         {/* Drawer nav links */}
