@@ -23,7 +23,7 @@ export default function AccountBtn() {
 
   useEffect(() => {
     Axios.get(`/${USER}`).then((res) => {
-      setUser(res.data);
+      setUser(res.data.name);
     });
   }, []);
 

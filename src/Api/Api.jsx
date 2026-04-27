@@ -1,5 +1,4 @@
-export const mainPath =
-  "https://peaceful-essence-production-80da.up.railway.app/api";
+export const mainPath = "https://glorious-contentment-noor.up.railway.app/api";
 export const Register = "register";
 export const Login = "login";
 export const LogoutPath = "logout";

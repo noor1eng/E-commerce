@@ -14,6 +14,7 @@ import { Menu, X, ArrowUpRight, ChevronRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import TranslateBtn from "../Button/TranslateBtn";
 import AccountBtn from "../Button/AccountBtn";
+import { Button } from "../ui/button";
 
 /* ── inject fonts once ── */
 if (!document.getElementById("nb-fonts")) {
@@ -435,16 +436,7 @@ export default function NavBar() {
         </div>
 
         {/* Top actions - Cart & Account */}
-        <div
-          style={{
-            padding: "16px 16px",
-            borderBottom: "1px solid #f3f4f6",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 12,
-          }}
-        >
+        <div className="p-4 flex justify-center items-center flex-col gap-3 border-b border-solid border-[#f3f4f6]">
           <Link
             to="/shopping"
             onClick={() => setMobileOpen(false)}
@@ -500,8 +492,13 @@ export default function NavBar() {
               )}
             </div>
           </Link>
-          <div style={{ flex: 1 }}>
-            <AccountBtn user="" />
+          <div className=" flex justify-center items-start flex-col gap-2">
+            <Link to={"/login"}>
+              <Button>{t("Log In")}</Button>
+            </Link>
+            <Link to={"/signin"}>
+              <Button>{t("Sign In")}</Button>
+            </Link>
           </div>
         </div>
 
