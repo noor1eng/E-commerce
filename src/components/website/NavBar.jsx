@@ -325,7 +325,7 @@ export default function NavBar() {
                 </span>
               )}
             </Link>
-            <AccountBtn user="" />
+            <AccountBtn />
           </div>
           {/* Mobile hamburger */}
           <button

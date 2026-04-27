@@ -56,7 +56,7 @@ export default function Topbar({ toggleSidebar }) {
         <div className=" rounded-full hover:bg-slate-200 p-1.5 cursor-pointer">
           <MdOutlineWbSunny className="text-[18px]" />
         </div>
-        <AccountBtn user={user} />
+        <AccountBtn />
       </div>
     </div>
   );

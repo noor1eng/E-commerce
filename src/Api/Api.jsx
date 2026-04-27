@@ -1,5 +1,5 @@
 export const mainPath =
-  "https://gregarious-courage-production.up.railway.app/api";
+  "https://peaceful-essence-production-80da.up.railway.app/api";
 export const Register = "register";
 export const Login = "login";
 export const LogoutPath = "logout";

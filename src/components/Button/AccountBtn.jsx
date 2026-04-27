@@ -11,11 +11,21 @@ import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import Cookie from "cookie-universal";
+import { useEffect, useState } from "react";
+import { Axios } from "@/Api/Axios";
+import { USER } from "@/Api/Api";
 
-export default function AccountBtn({ user }) {
+export default function AccountBtn() {
   const { t } = useTranslation();
   const cookie = Cookie();
   const token = cookie.get("e-commerce");
+  const [user, setUser] = useState("");
+
+  useEffect(() => {
+    Axios.get(`/${USER}`).then((res) => {
+      setUser(res.data);
+    });
+  }, []);
 
   return (
     <DropdownMenu>
@@ -37,6 +47,8 @@ export default function AccountBtn({ user }) {
                 {t("Sign In")}
               </DropdownMenuItem>
             </Link>
+            <DropdownMenuSeparator />
+
             <Link to={"/login"}>
               <DropdownMenuItem className="cursor-pointer">
                 {t("Log In")}
