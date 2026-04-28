@@ -227,9 +227,31 @@
   "Terms of Use" : "شروط الاستخدام",
   "Shipping & Delivery" : "الشحن والتوصيل",
   "Hama" : "حماة",
-  "SYRIA" : "سوريا",
+  "Syria" : "سوريا",
   "Language" : "اللغة",
   "View All Categories" : "عرض جميع الفئات",
-  "Browse Categories" : "استعرض الفئات"
+  "Browse Categories" : "استعرض الفئات",
+  "Tecnology" : "التكنولوجيا",
+  "Business" : "الأعمال",
+  "Health" : "الصحة",
+  "Fitness" : "اللياقة البدنية",
+  "Travel" : "السفر",
+  "Food" : "الطعام",
+  "Education" : "التعليم",
+  "Finance" : "المالية",
+  "Marketing" : "التسويق",
+  "Photography" : "التصوير",
+  "Music" : "الموسيقى",
+  "Art" : "الفن",
+  "Fashion" : "الموضة",
+  "Sports" : "الرياضة",
+  "Movies" : "الأفلام",
+  "Gaming" : "الألعاب",
+  "Books" : "الكتب",
+  "Psychology" : "علم النفس",
+  "Technology" : "التكنولوجيا",
+  "Science" : "العلوم",
+  "Programming" : "البرمجة"
+  
 
 }

@@ -72,7 +72,7 @@ function CategoryCard({ cat }) {
           {/* Bottom overlay: title + button */}
           <div className="absolute inset-x-0 bottom-0 p-4">
             <h3 className="text-lg font-semibold text-white drop-shadow mb-2 truncate">
-              {cat.title}
+              {t(cat.title)}
             </h3>
             <div
               className={cn(

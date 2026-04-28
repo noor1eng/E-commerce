@@ -36,7 +36,7 @@ const Footer = () => {
   const contactInfo = [
     { icon: Phone, text: "+966 50 000 0000" },
     { icon: Mail, text: "info@ecommerce.com" },
-    { icon: MapPin, text: t("حماة , سوريا") },
+    { icon: MapPin, text: t("Hama") + ", " + t("Syria") },
   ];
 
   const socialLinks = [

@@ -37,7 +37,6 @@ const NAV_LINKS = [
 export default function NavBar() {
   const cookie = Cookie();
   const token = cookie.get("e-commerce");
-  console.log(token);
 
   const { t } = useTranslation();
   const [categories, setCategories] = useState([]);
@@ -124,7 +123,6 @@ export default function NavBar() {
                             {categories.map((cat) => (
                               <Link
                                 key={cat.id}
-                                to={`/products?category=${cat.id}`}
                                 className="flex flex-col items-center gap-1.5 p-2 border border-gray-100 rounded-[10px] no-underline bg-white hover:bg-gray-50 hover:border-gray-300 transition-all duration-150"
                               >
                                 <img
@@ -133,7 +131,7 @@ export default function NavBar() {
                                   className="w-[52px] h-[52px] object-cover rounded-lg"
                                 />
                                 <span className="text-[11px] font-medium text-gray-700 text-center leading-tight">
-                                  {cat.title}
+                                  {t(cat.title)}
                                 </span>
                               </Link>
                             ))}
@@ -206,7 +204,7 @@ export default function NavBar() {
 
       {/* Drawer panel */}
       <div
-        className={`fixed top-0 right-0 bottom-0 w-[300px] bg-white shadow-2xl flex flex-col overflow-y-auto transition-transform duration-300 ${
+        className={`fixed top-0 right-0 bottom-0 w-[300px] bg-white shadow-2xl py-5 flex flex-col overflow-y-auto transition-transform duration-300 ${
           mobileOpen ? "translate-x-0" : "translate-x-full"
         }`}
         style={{
@@ -216,7 +214,7 @@ export default function NavBar() {
         }}
       >
         {/* Drawer header */}
-        <div className="flex items-center justify-between px-5 py-4.5 border-b border-gray-100">
+        <div className="flex items-center justify-between px-5 py-4.5 ">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-gray-900 flex items-center justify-center">
               <MdOutlineShoppingCart className="text-white text-sm" />
@@ -233,6 +231,12 @@ export default function NavBar() {
 
         {/* Top actions - Cart & Account */}
         <div className="p-4 flex flex-col gap-3 border-b border-gray-100">
+          <div className="mt-auto px-4 py-4 border-t border-gray-100 flex items-center justify-center gap-2">
+            <span className="text-sm text-gray-500 font-medium">
+              {t("Language")}:
+            </span>
+            <TranslateBtn />
+          </div>
           <Link
             to="/shopping"
             onClick={() => setMobileOpen(false)}
@@ -258,13 +262,16 @@ export default function NavBar() {
                 </Button>
               </Link>
               <Link to={"/signin"} className="w-full">
-                <Button className="w-full h-11 text-sm font-medium">
+                <Button className="w-full h-11 text-sm font-medium bg-white text-black border border-gray-300">
                   {t("Sign In")}
                 </Button>
               </Link>
             </div>
           ) : (
-            <AccountBtn />
+            <Button className="w-full h-11 text-sm font-medium bg-red-600">
+              {t("Log Out")}
+              <LogOut />
+            </Button>
           )}
         </div>
 
@@ -296,7 +303,6 @@ export default function NavBar() {
             {categories.map((cat) => (
               <Link
                 key={cat.id}
-                to={`/products?category=${cat.id}`}
                 onClick={() => setMobileOpen(false)}
                 className="flex flex-col items-center gap-1.25 p-2 border border-gray-100 rounded-[10px] no-underline bg-white hover:border-gray-300 transition-all"
               >
@@ -321,14 +327,6 @@ export default function NavBar() {
           >
             {t("View All Categories")} <ArrowUpRight size={14} />
           </button>
-        </div>
-
-        {/* Drawer bottom */}
-        <div className="mt-auto px-4 py-4 border-t border-gray-100 flex items-center justify-center gap-2">
-          <span className="text-sm text-gray-500 font-medium">
-            {t("Language")}:
-          </span>
-          <TranslateBtn />
         </div>
       </div>
     </>

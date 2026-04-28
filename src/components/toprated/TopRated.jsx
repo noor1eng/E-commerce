@@ -2,7 +2,9 @@ import { useState } from "react";
 import NavBar from "../website/NavBar";
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
+import { useSonner } from "@/hooks/use-sonner";
 
+const showToast = useSonner();
 const products = [
   {
     id: 1,
@@ -153,6 +155,7 @@ function ProductCard({ product }) {
   function handleAdd() {
     setAdded(true);
     setTimeout(() => setAdded(false), 1500);
+    showToast(t("Adding to Cart"));
   }
 
   return (

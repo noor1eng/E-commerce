@@ -161,8 +161,8 @@ export default function ShoppingCart() {
               {t("Your Shopping Cart")}
             </h1>
             <p className="text-muted-foreground">
-              {`${itemNumber} ${itemNumber === 1 ? t("item") : t("items")}`} {t("in your cart")}
-              •{" "}
+              {`${itemNumber} ${itemNumber === 1 ? t("item") : t("items")}`}{" "}
+              {t("in your cart")}•{" "}
               <span className="text-foreground font-semibold">
                 ${subtotal.toFixed(2)}
               </span>
@@ -176,7 +176,9 @@ export default function ShoppingCart() {
                 <Card className="border-dashed">
                   <CardContent className="flex flex-col items-center justify-center py-12 text-center">
                     <ShoppingBag className="text-muted-foreground/50 mb-4 size-12" />
-                    <h3 className="text-lg font-medium">{t("Your cart is empty")}</h3>
+                    <h3 className="text-lg font-medium">
+                      {t("Your cart is empty")}
+                    </h3>
                     <p className="text-muted-foreground mt-1 text-sm">
                       {t("Add some items to get started")}
                     </p>
@@ -199,16 +201,22 @@ export default function ShoppingCart() {
             <div className="flex flex-col gap-4 w-full lg:w-96">
               <Card className=" gap-0">
                 <CardHeader className="pb-4">
-                  <CardTitle className="text-xl">{t("Order Summary")}</CardTitle>
+                  <CardTitle className="text-xl">
+                    {t("Order Summary")}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-4">
                   <div className="flex flex-col gap-3">
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">{t("Subtotal")}</span>
+                      <span className="text-muted-foreground">
+                        {t("Subtotal")}
+                      </span>
                       <span>${subtotal.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">{t("Shipping")}</span>
+                      <span className="text-muted-foreground">
+                        {t("Shipping")}
+                      </span>
                       <span className="text-success">{t("Free")}</span>
                     </div>
                     {/* {savings > 0 && (
