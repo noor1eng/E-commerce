@@ -2,8 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import photo1 from "../../assets/pexels-marek-kupiec-1696944-11295238.jpg";
-import photo2 from "../../assets/pexels-marina-podrez-3269296-11671964.jpg";
+import photo1 from "../../assets/fabian-heimann-4R_WEmhx8og-unsplash.jpg";
+import photo2 from "../../assets/kiran-ck-LSNJ-pltdu8-unsplash.jpg";
 import photo3 from "../../assets/pexels-saliemolini-13430493.jpg";
 import {
   Search,
