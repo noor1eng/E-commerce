@@ -1,5 +1,5 @@
 import { CAT, CATADD } from "@/Api/Api";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -15,11 +15,13 @@ import Loading from "@/pages/Loading";
 import { MdClose } from "react-icons/md";
 import { Axios } from "@/Api/Axios";
 import { useTranslation } from "react-i18next";
+import { Rander } from "./context/RanderContext";
 
 export default function AddCat() {
   const focus = useRef(null);
   const [title, setTitle] = useState("");
   const [image, setImage] = useState(null);
+  const { rander, rerander } = useContext(Rander);
   const [load, setLoad] = useState(false);
   const nav = useNavigate();
   const { t } = useTranslation();
@@ -40,6 +42,7 @@ export default function AddCat() {
 
     try {
       await Axios.post(`${CATADD}/add`, form);
+      rerander((prev) => !prev);
       nav("/dashboard/categories");
     } catch (err) {
       console.log(err);

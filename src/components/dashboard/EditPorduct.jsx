@@ -20,13 +20,14 @@ import { Progress } from "@/components/ui/progress";
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { CAT, PRODUCT } from "@/Api/Api";
 import { Axios } from "@/Api/Axios";
 import { useNavigate, useParams } from "react-router-dom";
 import Loading from "@/pages/Loading";
 import { MdOutlineAddPhotoAlternate, MdOutlineCancel } from "react-icons/md";
 import { useTranslation } from "react-i18next";
+import { Rander } from "./context/RanderContext";
 //import
 
 export default function EditProduct() {
@@ -44,6 +45,7 @@ export default function EditProduct() {
   const [id, setID] = useState("");
   const [categories, setCat] = useState([]);
   const [imageId, setImgId] = useState([]);
+  const { rander, rerander } = useContext(Rander);
   const [upload, setUpload] = useState([]);
   const focus = useRef(null);
   const [idfromserver, setidformserver] = useState([]);

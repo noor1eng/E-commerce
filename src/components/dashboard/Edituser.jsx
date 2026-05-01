@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 import { Axios } from "@/Api/Axios";
 import { USER } from "@/Api/Api";
@@ -14,11 +14,13 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { useTranslation } from "react-i18next";
+import { Rander } from "./context/RanderContext";
 
 export default function Edituser() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [able, disable] = useState(true);
+  const { rander, rerander } = useContext(Rander);
   const [role, setRole] = useState("");
   const pathID = useParams().id;
   const nav = useNavigate();
@@ -45,6 +47,7 @@ export default function Edituser() {
         email,
         role,
       });
+      rerander((prev) => !prev);
       nav("/dashboard/users");
     } catch (err) {
       console.log(err);

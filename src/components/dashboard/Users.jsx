@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { USER } from "../../Api/Api";
 import { UsersShow } from "../../Api/Api";
 import { Axios } from "../../Api/Axios";
@@ -7,12 +7,13 @@ import { MdOutlinePersonAdd } from "react-icons/md";
 import { Button } from "../ui/button";
 import Table from "./Table";
 import { useTranslation } from "react-i18next";
+import { Rander } from "./context/RanderContext";
 
 export default function Users() {
   //states
   const [user, setUser] = useState([]);
   const [noUser, setNouser] = useState(false);
-  const [rand, rerand] = useState(false);
+  const { rander, rerander } = useContext(Rander);
   const [CurrentUser, setCurrentUser] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
@@ -31,7 +32,7 @@ export default function Users() {
       .catch((err) => {
         console.log(err);
       });
-  }, [rand, limit, page]);
+  }, [rander, limit, page]);
   // get all user
 
   //get current user
@@ -91,7 +92,6 @@ export default function Users() {
         header={header}
         data={user}
         CurrentUser={CurrentUser}
-        rerand={rerand}
         deletee={USER}
         noUser={noUser}
         add="users"

@@ -8,7 +8,6 @@ import { RiAdminLine } from "react-icons/ri";
 import { TbUserEdit } from "react-icons/tb";
 import { Link } from "react-router-dom";
 import { Axios } from "@/Api/Axios";
-import { Badge } from "@/components/ui/badge";
 import {
   Tooltip,
   TooltipContent,
@@ -16,6 +15,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import PaginationCom from "../pagination/Pagination";
+import { Rander } from "./context/RanderContext";
+import { useContext } from "react";
 
 const roleMap = {
   1995: {
@@ -112,9 +113,7 @@ export default function Table({
   header,
   data,
   CurrentUser,
-  rerand,
   deletee,
-  noUser,
   add,
   limit,
   page,
@@ -125,12 +124,14 @@ export default function Table({
   const totalPages = total ? Math.ceil(total / limit) : 0;
   const isLoading = data.length === 0 && total === undefined;
   const isEmpty = data.length === 0 && total !== undefined;
+  const { rander, rerander } = useContext(Rander);
+  console.log(rander);
 
   async function Delete(id) {
     if (currentuser && id === currentuser.id) return;
     try {
       await Axios.delete(`/${deletee}/${id}`);
-      rerand((prev) => !prev);
+      rerander((prev) => !prev);
     } catch {
       console.log("cant delete");
     }

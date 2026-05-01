@@ -1,7 +1,6 @@
 import {
   Card,
   CardContent,
-  CardHeader,
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
@@ -19,27 +18,29 @@ import { Progress } from "@/components/ui/progress";
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { MdOutlineAddPhotoAlternate, MdOutlineCancel } from "react-icons/md";
 import { CAT, PRODUCT } from "@/Api/Api";
 import { Axios } from "@/Api/Axios";
 import { useNavigate } from "react-router-dom";
 import Loading from "@/pages/Loading";
 import { useTranslation } from "react-i18next";
+import { Rander } from "./context/RanderContext";
 
 export default function AddPro() {
   const [FormDataa, setFormData] = useState({
     category: "",
     title: "",
     description: "",
-    price: "",
+    price: "0",
     discount: "0",
     About: "",
-    Stock: "0",
+    stock: "0",
   });
   const [id, setID] = useState("");
   const [load, setLoad] = useState(false);
   const [images, setImages] = useState([]);
+  const { rander, rerander } = useContext(Rander);
   const [imageId, setImgId] = useState([]);
   const [categories, setCat] = useState([]);
   const [upload, setUpload] = useState([]);
@@ -53,6 +54,8 @@ export default function AddPro() {
       {cat.title}
     </SelectItem>
   ));
+
+  console.log(id);
 
   useEffect(() => {
     focus.current?.focus();
@@ -73,8 +76,9 @@ export default function AddPro() {
     setLoad(true);
 
     try {
-      await Axios.post(`/${PRODUCT}/edit/${id}`, FormDataa);
+      await Axios.post(`${PRODUCT}/edit/${id}`, FormDataa);
       nav("/dashboard/product");
+      rerander((prev) => !prev);
     } catch (err) {
       console.log(err);
     } finally {
@@ -87,11 +91,11 @@ export default function AddPro() {
       const { data } = await Axios.post(`${PRODUCT}/add`, {
         category: FormDataa.category,
         title: FormDataa.title || "New Product",
-        description: FormDataa.description || "",
+        description: FormDataa.description || "sdf",
         price: FormDataa.price || 0,
         discount: FormDataa.discount || 0,
-        About: FormDataa.About || "",
-        Stock: FormDataa.Stock || 0,
+        About: FormDataa.About || "safd",
+        stock: FormDataa.stock,
       });
       setID(data.id);
     } catch (err) {

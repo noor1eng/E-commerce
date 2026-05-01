@@ -2,17 +2,18 @@ import { MdOutlinePersonAdd } from "react-icons/md";
 import Table from "./Table";
 import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CAT, CATADELETE } from "@/Api/Api";
 import { Axios } from "@/Api/Axios";
 import { useTranslation } from "react-i18next";
+import { Rander } from "./context/RanderContext";
 
 export default function Catigories() {
   //states
   const [categories, setCat] = useState([]);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [rand, rerand] = useState(false);
+  const { rander, rerander } = useContext(Rander);
   const [total, setTotal] = useState();
   const { t } = useTranslation();
   //states
@@ -26,7 +27,7 @@ export default function Catigories() {
       .catch((err) => {
         console.log(err);
       });
-  }, [rand, limit, page]);
+  }, [rander, limit, page]);
   // effect
 
   const header = [
@@ -71,7 +72,6 @@ export default function Catigories() {
         header={header}
         data={categories}
         deletee={CATADELETE}
-        rerand={rerand}
         limit={limit}
         page={page}
         setPage={setPage}

@@ -1,5 +1,5 @@
 //rebuild
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { MdClose } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { Axios } from "../../Api/Axios";
@@ -8,14 +8,9 @@ import Loading from "../../pages/Loading";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "../ui/card";
+import { Card, CardContent, CardTitle, CardDescription } from "../ui/card";
 import { useTranslation } from "react-i18next";
+import { Rander } from "./context/RanderContext";
 
 export default function AddUser() {
   const focus = useRef(null);
@@ -26,6 +21,7 @@ export default function AddUser() {
   });
   const [role, setRole] = useState("");
   const [load, setLoad] = useState(false);
+  const { rander, rerander } = useContext(Rander);
   const nav = useNavigate();
   const { t } = useTranslation();
 
@@ -44,6 +40,7 @@ export default function AddUser() {
         password: Form.password,
         role,
       });
+      rerander((prev) => !prev);
       nav("/dashboard/users");
     } catch (err) {
       console.log(err);

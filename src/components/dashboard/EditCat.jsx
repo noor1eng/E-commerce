@@ -1,5 +1,5 @@
 import { CAT, CATAEDIT } from "@/Api/Api";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -14,10 +14,12 @@ import {
 } from "@/components/ui/card";
 import { useTranslation } from "react-i18next";
 import { Axios } from "@/Api/Axios";
+import { Rander } from "./context/RanderContext";
 
 export default function EditCat() {
   const pathID = useParams().id;
   const [title, setTitle] = useState("");
+  const { rander, rerander } = useContext(Rander);
   const [image, setImage] = useState(null);
   const nav = useNavigate();
   const { t } = useTranslation();
@@ -42,6 +44,7 @@ export default function EditCat() {
 
     try {
       await Axios.post(`${CATAEDIT}/edit/${pathID}`, form);
+      rerander((prev) => !prev);
       nav("/dashboard/categories");
     } catch (err) {
       console.log(err);

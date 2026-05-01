@@ -2,15 +2,16 @@ import { MdOutlinePersonAdd } from "react-icons/md";
 import Table from "./Table";
 import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Axios } from "@/Api/Axios";
 import { PRODUCT, PRODUCTS } from "@/Api/Api";
 import { useTranslation } from "react-i18next";
+import { Rander } from "./context/RanderContext";
 
 export default function Product() {
   //states
   const [products, setPro] = useState([]);
-  const [rand, rerand] = useState(false);
+  const { rander, rerander } = useContext(Rander);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [total, setTotal] = useState();
@@ -27,7 +28,7 @@ export default function Product() {
       .catch((err) => {
         console.log(err);
       });
-  }, [rand, page, limit]);
+  }, [rander, page, limit]);
   // effect
   const header = [
     {
@@ -75,7 +76,6 @@ export default function Product() {
         header={header}
         data={products}
         deletee={PRODUCT}
-        rerand={rerand}
         add="product"
         page={page}
         limit={limit}
