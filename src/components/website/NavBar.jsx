@@ -175,7 +175,7 @@ export default function NavBar() {
                 <MdOutlineShoppingCart className="text-lg text-gray-700" />
               </div>
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-4.5 h-4.5 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center border-2 border-white">
+                <span className="absolute -top-1 -right-1 w-3.5 h-3.5 p-2 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center border-2 border-white">
                   {cartCount > 9 ? "9+" : cartCount}
                 </span>
               )}

@@ -78,7 +78,6 @@ function SkeletonCard() {
 function ProductCard({ pro, rank, onAddToCart }) {
   const [hovered, setHovered] = useState(false);
   const [added, setAdded] = useState(false);
-  const [wishlisted, setWishlisted] = useState(false);
   const { t } = useTranslation();
   const discounted = pro.price - (pro.discount || 0);
 
@@ -189,6 +188,10 @@ export default function ProductWeb() {
   const [total, setTotal] = useState(0);
   const [search, setSearch] = useState("");
   const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState({
+    id: "all",
+    label: "All",
+  });
   const totalPages = Math.ceil(total / limit);
   const showToast = useSonner();
   const { t } = useTranslation();
@@ -217,10 +220,47 @@ export default function ProductWeb() {
     if (idx >= 0) cart[idx].quantity = (cart[idx].quantity || 1) + 1;
     else cart.push({ ...product, quantity: 1 });
     localStorage.setItem("product", JSON.stringify(cart));
-    showToast(t("Adding to Cart"));
+    showToast(t("Product added to cart"));
   }
 
-  const visible = products.filter((p) => p.images?.length > 0);
+  const visible = products.filter((p) => {
+    if (!p.images?.length) return false;
+    const searchTerm = search.trim().toLowerCase();
+    const productTitle = p.title?.toString().toLowerCase() || "";
+    const productCategoryRaw = p.category;
+    const productCategoryText =
+      typeof productCategoryRaw === "string"
+        ? productCategoryRaw.toLowerCase()
+        : "";
+    const productCategoryId =
+      typeof productCategoryRaw === "object"
+        ? productCategoryRaw.id?.toString().toLowerCase() || ""
+        : productCategoryRaw?.toString().toLowerCase() || "";
+    const productCategoryLabel =
+      typeof productCategoryRaw === "object"
+        ? productCategoryRaw.title?.toString().toLowerCase() || ""
+        : "";
+
+    const selectedCategoryId = selectedCategory.id?.toString().toLowerCase();
+    const selectedCategoryLabel =
+      selectedCategory.label?.toString().toLowerCase() || "";
+
+    const matchesSearch =
+      searchTerm === "" ||
+      productTitle.includes(searchTerm) ||
+      productCategoryText.includes(searchTerm) ||
+      productCategoryLabel.includes(searchTerm);
+
+    const matchesCategory =
+      selectedCategoryId === "all" ||
+      productCategoryId === selectedCategoryId ||
+      productCategoryText === selectedCategoryId ||
+      productCategoryLabel === selectedCategoryId ||
+      productCategoryText === selectedCategoryLabel ||
+      productCategoryLabel === selectedCategoryLabel;
+
+    return matchesSearch && matchesCategory;
+  });
 
   return (
     <>
@@ -228,7 +268,6 @@ export default function ProductWeb() {
 
       <div className="min-h-screen bg-gray-100">
         <NavBar />
-
         <main
           className="max-w-5xl mx-auto pt-28 pb-16 px-6"
           style={{ fontFamily: "'DM Sans', sans-serif" }}
@@ -293,6 +332,46 @@ export default function ProductWeb() {
                 className="w-full h-9.5 pl-8 p-4  rounded-full border border-gray-200 bg-white text-xs text-gray-900 placeholder-gray-400 outline-none"
               />
             </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2.5 mb-5">
+            <button
+              type="button"
+              onClick={() =>
+                setSelectedCategory({ id: "all", label: t("All") })
+              }
+              className={`rounded-full px-4 py-2 text-xs font-medium transition-colors border ${
+                selectedCategory.id === "all"
+                  ? "bg-gray-900 text-white border-gray-900"
+                  : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
+              }`}
+            >
+              {t("All")}
+            </button>
+            {categories.map((cat) => {
+              const categoryId =
+                cat.id?.toString() || cat.title || cat.name || cat.category;
+              const categoryLabel = cat.title || cat.name || cat.category;
+              return (
+                <button
+                  key={cat.id ?? categoryLabel}
+                  type="button"
+                  onClick={() =>
+                    setSelectedCategory({
+                      id: categoryId,
+                      label: categoryLabel,
+                    })
+                  }
+                  className={`rounded-full px-4 py-2 text-xs font-medium transition-colors border ${
+                    selectedCategory.id === categoryId
+                      ? "bg-gray-900 text-white border-gray-900"
+                      : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
+                  }`}
+                >
+                  {t(categoryLabel)}
+                </button>
+              );
+            })}
           </div>
 
           {/* ── Grid ── */}

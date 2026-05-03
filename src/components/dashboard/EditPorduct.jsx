@@ -77,6 +77,7 @@ export default function EditProduct() {
         setID(product.id);
         setFormData(product);
         setImagesFromApi(product.images || []);
+        console.log(res.data);
       })
       .catch(() => {
         nav("/dashboard/product/page/404", { replace: true });

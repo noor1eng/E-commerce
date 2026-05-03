@@ -135,7 +135,7 @@ export default function CategorieWeb() {
   return (
     <>
       <NavBar />
-      <div className="min-h-screen bg-slate-50">
+      <div className="minh-screen bg-slate-50">
         <section className="mx-auto max-w-6xl px-4 pt-28 pb-16 sm:px-6 lg:px-8">
           {/* ── Header ── */}
           <div className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">

@@ -29,6 +29,7 @@ import { useTranslation } from "react-i18next";
 import { Axios } from "@/Api/Axios";
 import { PRODUCTS } from "@/Api/Api";
 import { useSonner } from "@/hooks/use-sonner";
+import { Breadcrumb } from "../ui/breadcrumb";
 
 /* ── inject fonts once ── */
 if (!document.getElementById("hp-fonts")) {
@@ -452,7 +453,6 @@ export default function HomePage() {
 
       <div className="md:shadow-[0px_0px_2px_0px_#0000006b] rounded-xl md:m-1.5">
         <NavBar />
-
         {/* ══ HERO ══ */}
         <section className="from-background to-accent/20 relative bg-linear-to-b mt-5 md:mt-0">
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 py-16 md:px-8 lg:px-12 lg:py-20">
